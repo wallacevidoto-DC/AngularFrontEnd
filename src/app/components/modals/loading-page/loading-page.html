@@ -1,0 +1,5 @@
+<div *ngIf="loading$ | async" class="loading-overlay">
+      <div class="loading-stack">
+        <div class="box" *ngFor="let n of boxes"></div>
+      </div>
+    </div>

@@ -1,0 +1,18 @@
+@if (isOpen) {
+<div class="custom-backdrop" (click)="onClose()"></div>
+
+<div class="custom-modal">
+  <div class="modal-header">
+    <mat-icon>{{ icon }}</mat-icon>
+    <h2>{{ title }}</h2>
+    <button mat-icon-button aria-label="Fechar"   class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="modal-content">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+}

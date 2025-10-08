@@ -1,0 +1,5 @@
+<div class="status" [ngClass]="status">
+  <span *ngIf="status === 'Conectado'">🟢 Conectado</span>
+  <span *ngIf="status === 'Desconectado'">🔴 Desconectado</span>
+  <span *ngIf="status === 'Reconectando'">🟡 Reconectando...</span>
+</div>

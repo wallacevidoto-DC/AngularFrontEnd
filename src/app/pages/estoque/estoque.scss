@@ -1,0 +1,161 @@
+.toolbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.toolbar button {
+  flex: 1;
+  margin: 0 3px;
+  padding: 12px;
+  font-size: 18px;
+  border: none;
+  background: #2d6cdf;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.toolbar button:hover {
+  background: #1b4fad;
+}
+
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.filter-bar select,
+.filter-bar input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.tabela-container {
+  padding: 12px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+  background: #1459d809;
+  width: 90%;
+  box-shadow: 0px 8px 5px rgba(0, 119, 255, 0.205);
+}
+
+.estoque-table {
+  width: 90%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+
+}
+
+.estoque-table th,
+.estoque-table td {
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.estoque-table th {
+  width: 120px;
+  color: #555;
+}
+
+.acoes {
+  display: flex;
+  // gap: 8px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center
+}
+
+.output,
+.transfer,
+.corretion {
+  padding: 0.5rem 1rem;
+  margin-right: 0.2rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: #fff;
+  font-size: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+
+}
+
+.output {
+  background-color: #e53e3e;
+
+  &:hover {
+    background-color: #c53030;
+    transform: translateY(-2px);
+  }
+}
+
+.transfer {
+  background-color: #3182ce;
+
+  &:hover {
+    background-color: #2b6cb0;
+    transform: translateY(-2px);
+  }
+}
+
+.corretion {
+  background-color: #d69e2e;
+
+  &:hover {
+    background-color: #b7791f;
+    transform: translateY(-2px);
+  }
+}
+
+.output:focus,
+.transfer:focus,
+.corretion:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
+}
+
+.btn-topo {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn-topo:hover {
+  transform: translateY(-2px);
+}
+
+.cart-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

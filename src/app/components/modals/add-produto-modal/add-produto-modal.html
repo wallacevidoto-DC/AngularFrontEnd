@@ -1,0 +1,70 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onOpenBase()" (closeModal)="onCloseBase()" title="Busca de Produtos"
+  icon="inbox">
+  <div>
+    <section class="section-group">
+      <legend>Produto</legend>
+      <form (ngSubmit)="submit()">
+        <div class="group">
+          <div class="campo">
+            <label>Código:</label>
+            <div style="display: flex;">
+
+              <input type="text" [(ngModel)]="formData.codigo" name="codigo">
+              <button type="button" (click)="buscarProduto()" 
+              style=" border: none; border-radius: 10px; display: flex;flex-direction: column;align-items: center;justify-content: space-around;cursor: pointer;margin-left: 5px; background: #3a80b15e;
+    padding: 10px;">
+              <mat-icon>search</mat-icon>Buscar</button>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label>Descrição:</label>
+            <input type="text" [ngModel]="produto.descricao || ''" name="descricao" readonly>
+          </div>
+
+          <div class="campo">
+            <label>Produto:</label>
+            <input type="text" [ngModel]="produto.produto|| ''" name="produto" readonly>
+          </div>
+
+          <div class="campo">
+            <label>Modelo:</label>
+            <input type="text" [ngModel]="produto.modelo || ''" name="modelo" readonly>
+          </div>
+        </div>
+        <br>
+        <section class="section-group inline-group">
+          <legend>Qunatidades atuais</legend>
+          <div class="group">
+            <div class="campo">
+              <label>Fardo:</label>
+              <input type="number" [(ngModel)]="formData.fardo" name="fardo" (input)="calcularTotal()">
+            </div>
+
+            <div class="campo">
+              <label>Qtd. por fardo:</label>
+              <input type="number" [(ngModel)]="formData.quantidade" name="quantidade" (input)="calcularTotal()">
+            </div>
+
+            <div class="campo">
+              <label>Quebra:</label>
+              <input type="number" [(ngModel)]="formData.quebra" name="quebra" (input)="calcularTotal()">
+            </div>
+
+            <div class="campo">
+              <label>Total:</label>
+              <input type="number" [value]="total" readonly>
+            </div>
+          </div>
+
+        </section>
+        <div class="botoes">
+          <button type="submit">Salvar</button>
+          <button type="button" (click)="onCloseBase()">Cancelar</button>
+
+        </div>
+      </form>
+    </section>
+
+  </div>
+</app-base-modal>

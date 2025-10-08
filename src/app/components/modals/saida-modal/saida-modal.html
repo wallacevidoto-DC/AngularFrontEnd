@@ -1,0 +1,96 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onCloseBase()" (closeModal)="onCloseBase()" title="Nova Saída"
+  icon="exit_to_app">
+  <div>
+    <section class="section-group">
+      <legend>Produto</legend>
+
+      <div class="group">
+        <div class="campo">
+          <label>Código:</label>
+          <input type="text" [(ngModel)]="formData.codigo" name="codigo" readonly>
+        </div>
+
+        <div class="campo">
+          <label>Descrição:</label>
+          <input type="text" [(ngModel)]="formData.descricao" name="descricao" readonly>
+        </div>
+
+        <div class="campo">
+          <label>Produto:</label>
+          <input type="text" [(ngModel)]="formData.produto" name="produto" readonly>
+        </div>
+
+        <div class="campo">
+          <label>Modelo:</label>
+          <input type="text" [(ngModel)]="formData.modelo" name="modelo" readonly>
+        </div>
+      </div>
+
+
+      <section class="section-group inline-group">
+        <legend>Quantidade atuais</legend>
+        <div class="group">
+          <div class="campo">
+            <label>Fardo:</label>
+            <input type="number" [(ngModel)]="formData.fardo" name="fardo" (input)="calcularTotal()"readonly>
+          </div>
+
+          <div class="campo">
+            <label>Qtd. por fardo:</label>
+            <input type="number" [(ngModel)]="formData.quantidade" name="quantidade" (input)="calcularTotal()"readonly>
+          </div>
+
+          <div class="campo">
+            <label>Quebra:</label>
+            <input type="number" [(ngModel)]="formData.quebra" name="quebra" (input)="calcularTotal()"readonly>
+          </div>
+
+          <div class="campo">
+            <label>Total:</label>
+            <input type="number" [value]="formData.total" readonly>
+          </div>
+        </div>
+
+      </section>
+    </section>
+    <form (ngSubmit)="submit()">
+      <section class="section-group inline-group">
+        <legend>Quantidade atualizada</legend>
+        <div class="group">
+          <div class="campo">
+            <label>Fardo:</label>
+            <input type="number" [(ngModel)]="formDataOut.fardo" name="fardo" (input)="calcularTotalNew()">
+          </div>
+
+          <div class="campo">
+            <label>Qtd. por fardo:</label>
+            <input type="number" [(ngModel)]="formDataOut.quantidade" name="quantidade" (input)="calcularTotalNew()">
+          </div>
+
+          <div class="campo">
+            <label>Quebra:</label>
+            <input type="number" [(ngModel)]="formDataOut.quebra" name="quebra" (input)="calcularTotalNew()">
+          </div>
+
+          <div class="campo">
+            <label>Total:</label>
+            <input type="number" [value]="totalNew" readonly>
+          </div>
+        </div>
+
+
+      </section>
+
+
+      <div class="campo">
+        <label>Observações:</label>
+        <textarea [(ngModel)]="formDataOut.observacao" name="observacao"></textarea>
+      </div>
+
+      <div class="botoes">
+        <button type="submit">Salvar</button>
+        <button type="button" (click)="onCloseBase()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</app-base-modal>

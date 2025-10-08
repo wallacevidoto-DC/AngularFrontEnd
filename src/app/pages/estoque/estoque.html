@@ -1,0 +1,63 @@
+<app-loading-page></app-loading-page>
+<button
+  *ngIf="showBtnTopo"
+  mat-fab
+  color="primary"
+  class="btn-topo"
+  (click)="scrollToTop()"
+  aria-label="Voltar ao topo"
+>
+  <mat-icon>arrow_upward</mat-icon>
+</button>
+
+
+<div class="toolbar">
+  <button (click)="entradaModal.openx()" title="Nova Entrada"><mat-icon>archive</mat-icon> Entrada <mat-icon>archive</mat-icon></button>
+</div>
+
+<div class="filter-bar">
+  <select [(ngModel)]="filtroColuna">
+    <option value="enderecoId">Cód. Endereço</option>
+    <option value="produto">Produto</option>
+    <option value="descricao">Descrição</option>
+    <option value="modelo">Modelo</option>
+    <option value="quantidade">Qtd.</option>
+    <option value="date_in">Data Entrada</option>
+    <option value="updates">Data Att</option>
+    <option value="obs">Observação</option>
+  </select>
+  <input type="text" [(ngModel)]="entradaPesquisa" placeholder="Pesquisar...">
+</div>
+
+<section class="cart-main">
+
+  <div *ngFor="let item of filtrados" class="card">
+    <table class="estoque-table">
+      <tr><th>Endereco</th><td>{{ item.enderecoId }}</td></tr>
+      <tr><th>Código</th><td>{{ item.codigo }}</td></tr>
+      <tr><th>Descrição</th><td>{{ item.descricao }}</td></tr>
+      <tr><th>Produto</th><td>{{ item.produto }}</td></tr>
+      <tr><th>Modelo</th><td>{{ item.modelo || '-' }}</td></tr>
+      <tr><th>Qtd.</th>
+          <td>{{ item.fardo }} x {{ item.quantidade }} + {{ item.quebra }} = {{ item.fardo*item.quantidade+item.quebra }}</td>
+      </tr>
+      <tr><th>Data</th><td>{{ item.date_in }}</td></tr>
+      <tr><th>Atualizado</th><td>{{ item.updates }}</td></tr>
+       <tr><th>Obs</th><td>{{ item.obs }}</td></tr>
+    </table>
+  
+    <div class="acoes">
+      <button (click)="saidaModal.openx(item)" class="output"><mat-icon>exit_to_app</mat-icon>SAÍDA</button>
+      <button (click)="transferenciaModal.openx(item)" class="transfer"><mat-icon>swap_horiz</mat-icon>TRANSFERÊNCIA</button>
+      <button (click)="correcaoModal.openx(item)" class="corretion"><mat-icon>edit</mat-icon>CORREÇÃO</button>
+    </div>
+  </div>
+</section>
+
+
+
+<app-entrada-modal #entradaModal (submitForm)="enviar($event)"></app-entrada-modal>
+<app-saida-modal #saidaModal (submitForm)="enviar($event)"></app-saida-modal>
+<app-transferencia-modal #transferenciaModal (submitForm)="enviar($event)"></app-transferencia-modal>
+<app-correcao-modal #correcaoModal (submitForm)="enviar($event)"></app-correcao-modal>
+

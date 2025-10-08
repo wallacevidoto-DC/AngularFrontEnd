@@ -1,0 +1,54 @@
+.custom-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9;
+}
+
+.custom-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  max-width: 900px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 8px;
+  z-index: 1001;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px 0 15px;
+  border-bottom: 1px solid #ccc;
+
+  
+}
+
+.modal-content {
+  padding: 16px;
+}
+
+.close-button {
+  color: #f44336; 
+  background: transparent;
+  border: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    font-size: large;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: rgba(244, 67, 54, 0.15);
+  }
+}

@@ -1,0 +1,175 @@
+@import url("../saida-modal/saida-modal.scss");
+
+.form-grid {
+  display: flex;
+  grid-template-columns: 100px 1fr 100px 1fr 100px 1fr auto;
+  gap: 10px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 200px;
+  min-width: 60px;
+  
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-group select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+  min-width: 50px;
+}
+
+/* Foco no select */
+.form-group select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+
+.merge-msg {
+  margin-top: 8px;
+  font-size: 14px;
+  color: red;
+}
+
+.merge-msg-disp {
+  margin-top: 8px;
+  font-size: 14px;
+  color: green;
+}
+
+.produtos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.produtos-table th,
+.produtos-table td {
+  border: 1px solid #ddd;
+  // padding: 6px 10px;
+  text-align: center;
+}
+
+.wt-in {
+  background: #b4f096;
+}
+
+.wt-out {
+  background: #7890f2;
+  color: #fff;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+
+  button {
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 15%;
+    cursor: pointer;
+    padding: 5px;
+  }
+}
+
+.legenda {
+  display: flex;
+  gap: 15px;
+  justify-content: space-around
+}
+
+.legenda-item {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: smaller;
+}
+
+.legenda-item.wt-in {
+  background: #b4f096;
+}
+
+.legenda-item.wt-out {
+  background: #7890f2;
+  color: #fff;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #ddd;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+input[readonly],
+textarea[readonly] {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.botoes {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.botoes button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.botoes button[type="submit"] {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.botoes button[type="button"] {
+  background-color: #f44336;
+  color: #fff;
+}

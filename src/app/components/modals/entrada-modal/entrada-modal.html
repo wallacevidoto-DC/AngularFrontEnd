@@ -1,0 +1,143 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onCloseBase()" (closeModal)="onCloseBase()" title="Nova Entrada"
+  icon="archive">
+
+
+  <!-- Localização -->
+  <section class="section-group">
+    <legend>Localização</legend>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Local:</label>
+        <select [(ngModel)]="local" name="local">
+          <option>CD</option>
+          <option>E</option>
+          <option>L</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Rua:</label>
+        <select [(ngModel)]="rua" name="rua" required>
+          <option>A</option>
+          <option>B</option>
+          <option>C</option>
+          <option>D</option>
+          <option>E</option>
+          <option>F</option>
+          <option>G</option>
+          <option>H</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Coluna:</label>
+        <select [(ngModel)]="coluna" name="coluna" required>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Palete:</label>
+        <select [(ngModel)]="palete" name="palete" required>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="icon-btn" (click)="getAddress()" style="height: 50px; border-radius: 10px;">🔍 Buscar</button>
+
+    @if (temProdutosIn === States.COMPLETE && existWTIN()) {
+    <p class="merge-msg">
+      Já existe produto registrado neste endereço.<br>
+      Se você prosseguir, o endereço será marcado como 'misto', contendo múltiplos produtos.
+    </p>
+    }
+    @else if (temProdutosIn === States.COMPLETE && !existWTIN()) {
+
+    <p class="merge-msg-disp">Disponível</p>
+    }
+  </section>
+
+  <section class="section-group">
+    <legend>Dados do Produto</legend>
+    <table class="produtos-table"> 
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Fardo</th>
+      <th>Quant.</th>
+      <th>Quebra</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of produtos; track $index) {
+      <tr [ngClass]="{'wt-in': item.wt === WT.IN, 'wt-out': item.wt === WT.OUT}">
+        
+        <!-- Ao clicar no código mostra um dialog/alert -->
+        <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
+          {{ item.codigo }}
+        </td>
+
+        <td>{{ item.fardo }}</td>
+        <td>{{ item.quantidade }}</td>
+        <td>{{ item.quebra }}</td>
+        
+        <!-- Botão de deletar só habilita se for OUT -->
+        <td>
+          <button mat-icon-button color="warn"
+                  [disabled]="item.wt !== WT.OUT"
+                  (click)="deletarItem(item)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+
+      </tr>
+    }
+  </tbody>
+</table>
+
+
+    <div class="actions">
+      <button style="font-size: xx-small;background-color: rgba(0, 102, 255, 0.308);" (click)="addProduto.openx()">
+        <mat-icon>add_circle</mat-icon>Adicionar</button>
+      <!-- <button style="font-size: xx-small;background-color: rgba(255, 0, 0, 0.404);">
+        <mat-icon>remove_circle</mat-icon>Remover</button> -->
+    </div>
+
+    <div class="legenda">
+      <span class="legenda-item wt-out">Produtos a registrar</span>
+      <span class="legenda-item wt-in">Produto existente no endereço</span>
+    </div>
+  </section>
+
+  <section class="section-group">
+    <legend>Observações</legend>
+    <textarea rows="3" [(ngModel)]="observacao"></textarea>
+  </section>
+
+  <div class="section-group">
+    <button (click)="submit()" class="btn-primary">Salvar</button>
+    <button class="btn-secondary">Cancelar</button>
+  </div>
+
+</app-base-modal>
+<app-add-produto-modall #addProduto (submitForm)="enviar($event)"></app-add-produto-modall>
