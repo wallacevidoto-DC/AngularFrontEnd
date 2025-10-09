@@ -14,20 +14,27 @@ import { LoadingPage } from "../../components/modals/loading-page/loading-page";
 import { LoadingService } from '../../components/modals/loading-page/LoadingService.service';
 
 
-export interface EstoqueItem {
-  estoqueId: number;
-  enderecoId: string;
+
+export interface Produto {
   codigo: string;
   descricao: string;
-  produto: string;
-  modelo?: string;
-  fardo: number;
-  quantidade: number;
-  quebra: number;
-  date_in: string;
-  updates:string,
-  obs:string
 }
+
+export interface EstoqueItem {
+  estoqueId: number;
+  enderecoId?: string | null;
+  produtoId: number;
+  semF: number;
+  quantidade: number;
+  dataF: string;
+  dataL: string;
+  lote?: string | null;
+  obs?: string | null;
+  createAt: string;
+  updateAt: string;
+  produto?: Produto | null;
+}
+
 
 @Component({
   selector: 'app-estoque',
@@ -55,7 +62,7 @@ export class Estoque implements OnInit {
   private dialog: MatDialog = inject(MatDialog);
 
   ngOnInit() {
- 
+
 
     this.wsService.status$.subscribe(status => {
       if (status === 'Conectado') {
@@ -77,35 +84,22 @@ export class Estoque implements OnInit {
         this.showBtnTopo = window.scrollY > 200;
       });
     });
-
-
-    this.openLogin()
-
-  }
-
-  openLogin() {
-
-    if (this.wsService.UserCurrent) {
-      return
-    }
-    const dialogRef = this.dialog.open(LoginModalComponent, {
-      width: '400px',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        // console.log('Login aprovado!',this.wsService.UserCurrent);
-      } else {
-        window.location.reload();
-      }
-    });
   }
 
   get filtrados(): EstoqueItem[] {
-    return this.dadosEstoque.filter(item =>
-      String((item as any)[this.filtroColuna] ?? '').toLowerCase().includes(this.entradaPesquisa.toLowerCase())
-    );
+    return this.dadosEstoque.filter(item => {
+      let valor: string = '';
+
+      if (this.filtroColuna === 'codigo' && item.produto) {
+        valor = item.produto.codigo;
+      } else if (this.filtroColuna === 'descricao' && item.produto) {
+        valor = item.produto.descricao;
+      } else {
+        valor = String((item as any)[this.filtroColuna] ?? '');
+      }
+
+      return valor.toLowerCase().includes(this.entradaPesquisa.toLowerCase());
+    });
   }
 
 

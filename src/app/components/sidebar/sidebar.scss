@@ -1,0 +1,78 @@
+.menu-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 40px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    min-height: 100vh;
+}
+
+.menu-card {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    height: 150px;
+    padding: 16px;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    gap: 10px;
+}
+
+.menu-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+    font-size: 48px;
+    margin-right: 16px;
+}
+
+.icon-estoque {
+    color: #4caf50;
+    /* verde */
+}
+
+.icon-entrada {
+    color: #ff9800;
+    /* laranja */
+}
+
+.card-text h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.card-text p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.mat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 700px) {
+    .menu-card {
+        // width: 90%;
+        justify-content: flex-start;
+    }
+
+    .menu-container {
+        align-content: flex-start;
+    }
+}

@@ -7,9 +7,9 @@ import { SaidaType } from '../../../types/saida.type';
 import { MatIconModule } from '@angular/material/icon';
 import { EntradaDto, ProdutoIO, WT } from '../entrada-modal/entrada-modal';
 import { WebSocketService } from '../../../service/ws.service';
-import { EstoqueItem } from '../../../pages/estoque/estoque';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingService } from '../loading-page/LoadingService.service';
+import { EstoqueItem } from '../../estoque/estoque';
 
 export interface TransferenciaDto {
   user: number;
@@ -27,7 +27,7 @@ export enum States {
 
 @Component({
   selector: 'app-transferencia-modal',
-  imports: [CommonModule, FormsModule, BaseModalComponent, MatIconModule,MatTooltipModule],
+  imports: [CommonModule, FormsModule, BaseModalComponent, MatIconModule, MatTooltipModule],
   templateUrl: './transferencia-modal.html',
   styleUrl: './transferencia-modal.scss'
 })
@@ -108,11 +108,11 @@ export class TransferenciaModal extends ModalBase {
   openx(itemData: EstoqueItem) {
     this.onClear()
     console.log('itemData', itemData);
-    this.enderecoOld = itemData.enderecoId
+    this.enderecoOld = itemData.enderecoId??''
     this.isOpen = true;
     if (itemData) {
       this.formData = { ...itemData };
-      this.produtos.push({ codigo: itemData.codigo, quantidade: itemData.quantidade, fardo: itemData.fardo, quebra: itemData.quantidade, wt: WT.OUT })
+      this.produtos.push({ codigo: itemData.produto?.codigo, quantidade: itemData.quantidade, quebra: itemData.quantidade, wt: WT.OUT })
     }
 
   }
@@ -146,45 +146,49 @@ export class TransferenciaModal extends ModalBase {
 
   submit() {
 
-    const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
+    if (this.wsService.UserCurrent) {
+      const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
 
-    const produtosList = this.produtos
-      .map(p => {
-        const fardo = p.fardo ? Number(p.fardo) : 0;
-        const quantidade = p.quantidade ? Number(p.quantidade) : 0;
-        const quebra = p.quebra ? Number(p.quebra) : 0;
-        const total = fardo * quantidade + quebra;
+      const produtosList = this.produtos
+        .map(p => {
+          const fardo = p.fardo ? Number(p.fardo) : 0;
+          const quantidade = p.quantidade ? Number(p.quantidade) : 0;
+          const quebra = p.quebra ? Number(p.quebra) : 0;
+          const total = fardo * quantidade + quebra;
 
-        return {
-          codigo: p.codigo,
-          descricao: p.descricao,
-          fardo,
-          quantidade,
-          quebra,
-          total
-        };
+          return {
+            codigo: p.codigo,
+            descricao: p.descricao,
+            fardo,
+            quantidade,
+            quebra,
+            total
+          };
+        });
+
+
+      const movimentacaoDto: TransferenciaDto = {
+        user: this.wsService.UserCurrent.userId,
+        data: new Date().toISOString(),
+        estoqueId: this.formData.estoqueId,
+        endereco: {
+          local: this.local,
+          rua: this.rua,
+          coluna: this.coluna,
+          palete: this.palete
+        },
+        observacoes: this.observacao,
+        produtos: produtosList
+
+      };
+
+      this.wsService.send({
+        action: 'transferencia',
+        dados: movimentacaoDto
       });
+      this.loadingService.show();
+    }
 
-
-    const movimentacaoDto: TransferenciaDto = {
-      user: this.wsService.UserCurrent.userId,
-      data: new Date().toISOString(),
-      estoqueId: this.formData.estoqueId,
-      endereco: {
-        local: this.local,
-        rua: this.rua,
-        coluna: this.coluna,
-        palete: this.palete
-      },
-      observacoes: this.observacao,
-      produtos: produtosList
-    };
-
-    this.wsService.send({
-      action: 'transferencia',
-      dados: movimentacaoDto
-    });
-    this.loadingService.show();
   }
 
   onClear() {

@@ -16,18 +16,14 @@ export class WebSocketService {
   private isConnected = false;
 
   private reconnectTimeout: any;
-  // private host!: string;
-  // private port!: number;
   private wsCurrent!:string;
 
   constructor(zone: NgZone) {
     this.zone = zone;
-    // this.host = window.location.hostname;
-    // this.port = 5173;
   }
 
 
-  UserCurrent!: User;
+  UserCurrent: User|null = null;
   
   reconnect(){
     if (this.wsCurrent) {

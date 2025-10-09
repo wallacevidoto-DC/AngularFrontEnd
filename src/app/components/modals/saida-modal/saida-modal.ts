@@ -5,6 +5,7 @@ import { SaidaType } from '../../../types/saida.type';
 import { BaseModalComponent, ModalBase } from "../base-modal/base-modal.component";
 import { WebSocketService } from '../../../service/ws.service';
 import { LoadingService } from '../loading-page/LoadingService.service';
+import { EstoqueItem } from '../../estoque/estoque';
 
 
 export interface SaidaFormDataIn {
@@ -82,13 +83,13 @@ export class SaidaModal extends ModalBase implements OnInit {
     observacao: '',
   } as SaidaFormDataOut;
 
-  openx(data?: Partial<SaidaFormDataIn>) {
+  openx(data?: EstoqueItem) {
     this.isOpen = true;
     this.onClear();
     if (data) {
       console.log('data', data);
 
-      this.formData = { ...this.formData, ...data };
+      // this.formData = { ...this.formData, ...data };
       this.formDataOut.estoqueId = this.formData.estoqueId
       this.calcularTotal();
       this.calcularTotalNew();
@@ -106,41 +107,44 @@ export class SaidaModal extends ModalBase implements OnInit {
   }
 
   submit() {
-    this.calcularTotal();
+    if (this.wsService.UserCurrent) {
+      this.calcularTotal();
 
-    const product: SaidaFormDataOut = { ...this.formDataOut };
-    const datas: SaidaType = {
-      action: 'saida',
-      user: this.wsService.UserCurrent.userId,
-      product
-    };
-    this.wsService.send(datas);
-    this.loadingService.show();
+      const product: SaidaFormDataOut = { ...this.formDataOut };
+      const datas: SaidaType = {
+        action: 'saida',
+        user: this.wsService.UserCurrent.userId,
+        product
+      };
+      this.wsService.send(datas);
+      this.loadingService.show();
+    }
+
   }
 
   onClear() {
-  this.formData = {
-    estoqueId: 0,
-    codigo: '',
-    descricao: '',
-    produto: '',
-    modelo: '',
-    fardo: 0,
-    quantidade: 0,
-    quebra: 0,
-    total: 0,
-    observacao: ''
-  } as SaidaFormDataIn;
+    this.formData = {
+      estoqueId: 0,
+      codigo: '',
+      descricao: '',
+      produto: '',
+      modelo: '',
+      fardo: 0,
+      quantidade: 0,
+      quebra: 0,
+      total: 0,
+      observacao: ''
+    } as SaidaFormDataIn;
 
-  this.formDataOut = {
-    estoqueId: 0,
-    fardo: 0,
-    quantidade: 0,
-    quebra: 0,
-    observacao: ''
-  } as SaidaFormDataOut;
+    this.formDataOut = {
+      estoqueId: 0,
+      fardo: 0,
+      quantidade: 0,
+      quebra: 0,
+      observacao: ''
+    } as SaidaFormDataOut;
 
-  this.totalNew = 0;
-}
+    this.totalNew = 0;
+  }
 
 }

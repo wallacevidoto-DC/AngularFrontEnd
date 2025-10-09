@@ -106,11 +106,6 @@ export class LoginModalComponent implements OnInit {
       };
       this.wsService.send(datas);
       this.loadingService.show();
-      // if (username === 'admin' && password === '1234') {
-      //   this.dialogRef.close(true); 
-      // } else {
-      //   alert('Usuário ou senha inválidos');
-      // }
     }
   }
 }

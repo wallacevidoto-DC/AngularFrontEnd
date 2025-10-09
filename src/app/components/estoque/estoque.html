@@ -18,12 +18,14 @@
 <div class="filter-bar">
   <select [(ngModel)]="filtroColuna">
     <option value="enderecoId">Cód. Endereço</option>
-    <option value="produto">Produto</option>
+    <option value="codigo">Código</option>
     <option value="descricao">Descrição</option>
-    <option value="modelo">Modelo</option>
     <option value="quantidade">Qtd.</option>
-    <option value="date_in">Data Entrada</option>
-    <option value="updates">Data Att</option>
+    <option value="dataF">Data F</option>
+     <option value="dataL">Data L</option>
+      <option value="createAt">Criação</option>
+    <option value="updateAt">Data Att</option>
+    <option lote="lote">Lote</option>
     <option value="obs">Observação</option>
   </select>
   <input type="text" [(ngModel)]="entradaPesquisa" placeholder="Pesquisar...">
@@ -34,16 +36,22 @@
   <div *ngFor="let item of filtrados" class="card">
     <table class="estoque-table">
       <tr><th>Endereco</th><td>{{ item.enderecoId }}</td></tr>
-      <tr><th>Código</th><td>{{ item.codigo }}</td></tr>
-      <tr><th>Descrição</th><td>{{ item.descricao }}</td></tr>
-      <tr><th>Produto</th><td>{{ item.produto }}</td></tr>
-      <tr><th>Modelo</th><td>{{ item.modelo || '-' }}</td></tr>
+      <tr><th>Código</th><td>{{ item.produto?.codigo }}</td></tr>
+      <tr><th>Descrição</th><td>{{ item.produto?.descricao }}</td></tr>
       <tr><th>Qtd.</th>
-          <td>{{ item.fardo }} x {{ item.quantidade }} + {{ item.quebra }} = {{ item.fardo*item.quantidade+item.quebra }}</td>
+          <td>{{ item.quantidade }}</td>
       </tr>
-      <tr><th>Data</th><td>{{ item.date_in }}</td></tr>
-      <tr><th>Atualizado</th><td>{{ item.updates }}</td></tr>
+      <tr><th>dataF</th><td>{{ item.dataF | date:'dd/MM/yyyy HH:mm:ss'  }}</td></tr>
+       <tr><th>semF</th><td>{{ item.semF }}</td></tr>
+      <tr><th>dataL</th><td>{{ item.dataL  | date:'dd/MM/yyyy HH:mm:ss'  }}</td></tr>
        <tr><th>Obs</th><td>{{ item.obs }}</td></tr>
+       <br>
+        <tr >
+          <th>Criado</th><td>{{ item.createAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        </tr>
+        <tr >
+          <th>Atualizado</th><td>{{ item.updateAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        </tr>
     </table>
   
     <div class="acoes">

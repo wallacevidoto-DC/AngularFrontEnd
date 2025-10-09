@@ -6,6 +6,7 @@ import { WebSocketService } from '../../../service/ws.service';
 import { SaidaFormDataIn, SaidaFormDataOut } from '../saida-modal/saida-modal';
 import { CorrecaoType } from '../../../types/correcao.type';
 import { LoadingService } from '../loading-page/LoadingService.service';
+import { EstoqueItem } from '../../estoque/estoque';
 
 @Component({
   selector: 'app-correcao-modal',
@@ -65,11 +66,11 @@ export class CorrecaoModal extends ModalBase implements OnInit {
   }
 
 
-  openx(data?: Partial<SaidaFormDataIn>) {
+  openx(data?: EstoqueItem) {
     this.isOpen = true;
     this.onClear();
     if (data) {
-      this.formData = { ...this.formData, ...data };
+      // this.formData = { ...this.formData, ...data };
       this.formDataOut.estoqueId = this.formData.estoqueId
       this.calcularTotal();
       this.calcularTotalNew();
@@ -92,17 +93,19 @@ export class CorrecaoModal extends ModalBase implements OnInit {
   }
 
   submit() {
-    this.calcularTotal();
+    if (this.wsService.UserCurrent) {
+      this.calcularTotal();
 
-    const product: SaidaFormDataOut = { ...this.formDataOut, };
-    const datas: CorrecaoType = {
-      action: 'correcao',
-      observacao:this.formDataOut.observacao,
-      user: this.wsService.UserCurrent.userId,
-      product
-    };
-    this.wsService.send(datas);
-    this.loadingService.show();
+      const product: SaidaFormDataOut = { ...this.formDataOut, };
+      const datas: CorrecaoType = {
+        action: 'correcao',
+        observacao: this.formDataOut.observacao,
+        user: this.wsService.UserCurrent.userId,
+        product
+      };
+      this.wsService.send(datas);
+      this.loadingService.show();
+    }
   }
   onClear() {
     this.formData = {

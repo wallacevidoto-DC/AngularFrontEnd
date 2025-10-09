@@ -53,7 +53,7 @@ export class EntradaModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  
+
   public WT = WT;
   tooltipDisabled = true;
   produtos: ProdutoIO[] = []
@@ -98,7 +98,7 @@ export class EntradaModal extends ModalBase implements OnInit {
         console.log('this.produtos', this.produtos);
         this.temProdutosIn = States.COMPLETE
         this.loadingService.hide();
-        
+
       }
       else if (data.type === 'entrada_resposta') {
         // this.loadingService.hide();
@@ -110,7 +110,7 @@ export class EntradaModal extends ModalBase implements OnInit {
           alert(data.mensagem)
         }
       }
-      
+
     });
 
   }
@@ -155,52 +155,55 @@ export class EntradaModal extends ModalBase implements OnInit {
 
   submit() {
 
-    const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
+    if (this.wsService.UserCurrent) {
+      const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
 
 
-    if (produtoInsert.length <= 0) {
-      alert('Adicione ao menos um produto.');
-      return
+      if (produtoInsert.length <= 0) {
+        alert('Adicione ao menos um produto.');
+        return
+      }
+
+      const produtosList = this.produtos
+        .filter(p => p.wt === WT.OUT)
+        .map(p => {
+          const fardo = p.fardo ? Number(p.fardo) : 0;
+          const quantidade = p.quantidade ? Number(p.quantidade) : 0;
+          const quebra = p.quebra ? Number(p.quebra) : 0;
+          const total = fardo * quantidade + quebra;
+
+          return {
+            codigo: p.codigo,
+            descricao: p.descricao,
+            fardo,
+            quantidade,
+            quebra,
+            total
+          };
+        });
+
+
+
+      const movimentacaoDto: EntradaDto = {
+        user: this.wsService.UserCurrent.userId,
+        data: new Date().toISOString(),
+        endereco: {
+          local: this.local,
+          rua: this.rua,
+          coluna: this.coluna,
+          palete: this.palete
+        },
+        observacoes: this.observacao,
+        produtos: produtosList
+      };
+
+      this.wsService.send({
+        action: 'entrada',
+        dados: movimentacaoDto
+      });
+      this.loadingService.show();
     }
 
-    const produtosList = this.produtos
-      .filter(p => p.wt === WT.OUT)
-      .map(p => {
-        const fardo = p.fardo ? Number(p.fardo) : 0;
-        const quantidade = p.quantidade ? Number(p.quantidade) : 0;
-        const quebra = p.quebra ? Number(p.quebra) : 0;
-        const total = fardo * quantidade + quebra;
-
-        return {
-          codigo: p.codigo,
-          descricao: p.descricao,
-          fardo,
-          quantidade,
-          quebra,
-          total
-        };
-      });
-
-
-
-    const movimentacaoDto: EntradaDto = {
-      user: this.wsService.UserCurrent.userId,
-      data: new Date().toISOString(),
-      endereco: {
-        local: this.local,
-        rua: this.rua,
-        coluna: this.coluna,
-        palete: this.palete
-      },
-      observacoes: this.observacao,
-      produtos: produtosList
-    };
-
-    this.wsService.send({
-      action: 'entrada',
-      dados: movimentacaoDto
-    });
-    this.loadingService.show();
   }
 
   enviar($event: AddProduto) {
