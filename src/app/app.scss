@@ -11,12 +11,13 @@ header {
 }
 
 .status {
-    position: relative;
+        position: relative;
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-start;
+    flex-direction: row;
     top: -10px;
     left: 10px;
+    align-items: center;
+    justify-content: space-between;
 }
 
 ::ng-deep .cdk-overlay-container {

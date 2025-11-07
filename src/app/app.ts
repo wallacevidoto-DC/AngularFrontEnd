@@ -22,7 +22,6 @@ export class App implements OnInit {
 
   showLoading: boolean = false;
 
-
   ngOnInit(): void {
 
     const wsRaw = localStorage.getItem("acessWebSocket");
