@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Directive, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({

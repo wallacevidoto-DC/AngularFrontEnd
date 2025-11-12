@@ -56,7 +56,7 @@ export interface EntradaDto {
 
 @Component({
   selector: 'app-entrada-modal',
-  imports: [CommonModule, FormsModule, BaseModalComponent, AddProdutoModal, MatIconModule, MatTooltipModule,MatSnackBarModule],
+  imports: [CommonModule, FormsModule, BaseModalComponent, AddProdutoModal, MatIconModule, MatTooltipModule, MatSnackBarModule],
   templateUrl: './entrada-modal.html',
   styleUrl: './entrada-modal.scss'
 })
@@ -68,9 +68,10 @@ export class EntradaModal extends ModalBase implements OnInit {
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
   private _snackBar = inject(MatSnackBar);
+  protected OpenSub: boolean = true;
 
-  
   public WT = Origem;
+  public Origem=Origem;
   tooltipDisabled = true;
   produtos: ProdutoSpDto[] = []
   public States = States;
@@ -110,7 +111,7 @@ export class EntradaModal extends ModalBase implements OnInit {
 
           this.produtos = [...produtosSemIn, ...novosProdutosIn];
         }
-        else{
+        else {
           this._snackBar.open(data.mensagem, "OK");
         }
         this.temProdutosIn = States.COMPLETE;
@@ -223,7 +224,6 @@ export class EntradaModal extends ModalBase implements OnInit {
   }
 
   enviar($event: ProdutoSpDto) {
-
     if ($event) {
       this.produtos.push($event)
     }

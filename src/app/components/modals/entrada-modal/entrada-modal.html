@@ -1,3 +1,6 @@
+@if (OpenSub) {
+
+
 <app-base-modal [isOpen]="isOpen" (openModal)="onCloseBase()" (closeModal)="onCloseBase()" title="Nova Entrada"
   icon="archive">
 
@@ -80,7 +83,10 @@
   </thead>
   <tbody>
     @for (item of produtos; track $index) {
-      <tr [ngClass]="{'wt-in': item.propsPST.origem}">
+      <tr  [ngClass]="{
+    'wt-in': item.propsPST.origem === Origem.IN,
+    'wt-out': item.propsPST.origem === Origem.OUT
+  }">
         
         <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
           {{ item.codigo }}
@@ -107,7 +113,7 @@
 
 
     <div class="actions">
-      <button style="font-size: xx-small;background-color: rgba(0, 102, 255, 0.308);" (click)="addProduto.openx()">
+      <button style="font-size: xx-small;background-color: rgba(0, 102, 255, 0.308);" (click)="addProduto.openx();OpenSub=false;">
         <mat-icon>add_circle</mat-icon>Adicionar</button>
       <!-- <button style="font-size: xx-small;background-color: rgba(255, 0, 0, 0.404);">
         <mat-icon>remove_circle</mat-icon>Remover</button> -->
@@ -130,4 +136,5 @@
   </div>
 
 </app-base-modal>
-<app-add-produto-modall #addProduto (submitForm)="enviar($event)"></app-add-produto-modall>
+}
+<app-add-produto-modall #addProduto (submitForm)="enviar($event)" (close)="OpenSub=true"></app-add-produto-modall>

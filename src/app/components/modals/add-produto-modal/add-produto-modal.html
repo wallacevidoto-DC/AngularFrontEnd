@@ -1,10 +1,9 @@
 <app-base-modal [isOpen]="isOpen" (openModal)="onOpenBase()" (closeModal)="onCloseBase()" title="Busca de Produtos"
-  icon="inbox">
-  <div>
+icon="inbox" >
+<!-- <div class="xcustom-backdrop"></div> -->
+<div style="z-index: 99999;">
     <section class="section-group">
       <legend>Produto</legend>
-
-      <!-- ⚙️ Vincula o form ao template -->
       <form #formRef="ngForm" (ngSubmit)="submit(formRef)">
         <div class="group">
           <div class="campo">

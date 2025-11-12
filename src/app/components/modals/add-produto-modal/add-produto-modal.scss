@@ -1,4 +1,14 @@
-/* Seções de campos com borda leve */
+.xcustom-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(2 3 6 / 53%);
+  z-index: 999;
+  overflow: hidden;
+}
+
 .section-group {
   display: flex;
   flex-direction: column;
