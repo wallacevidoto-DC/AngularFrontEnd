@@ -18,6 +18,15 @@ export class BaseModalComponent {
   @Output() closeModal = new EventEmitter<void>();
   @Output() openModal = new EventEmitter<void>();
 
+
+  ngOnChanges() {
+  if (this.isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
+}
+
   onClose() {
     this.isOpen = false;
     this.closeModal.emit();

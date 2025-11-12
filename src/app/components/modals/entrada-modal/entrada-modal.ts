@@ -13,6 +13,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
 import { LoadingService } from '../loading-page/LoadingService.service';
+import { Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from './index.interface';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 export enum WT {
   NONE = "NONE",
   IN = "IN",
@@ -40,9 +44,19 @@ export interface EntradaDto {
 
 
 
+
+
+
+
+
+
+
+
+
+
 @Component({
   selector: 'app-entrada-modal',
-  imports: [CommonModule, FormsModule, BaseModalComponent, AddProdutoModal, MatIconModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, BaseModalComponent, AddProdutoModal, MatIconModule, MatTooltipModule,MatSnackBarModule],
   templateUrl: './entrada-modal.html',
   styleUrl: './entrada-modal.scss'
 })
@@ -53,16 +67,17 @@ export class EntradaModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
+  private _snackBar = inject(MatSnackBar);
 
-  public WT = WT;
+  
+  public WT = Origem;
   tooltipDisabled = true;
-  produtos: ProdutoIO[] = []
+  produtos: ProdutoSpDto[] = []
   public States = States;
   temProdutosIn: States = States.NONE;
-  local: string = '';
   rua: string = '';
-  coluna: string = '';
-  palete: string = '';
+  bloco: string = '';
+  apt: string = '';
 
   observacao: string = '';
 
@@ -73,33 +88,35 @@ export class EntradaModal extends ModalBase implements OnInit {
 
       if (!data) return;
 
-      if (data.type === 'in_address' && data.produtos) {
-        this.temProdutosIn = States.LOAD
-        const novosProdutos = data.produtos as ProdutoIO[];
+      if (data.type === 'get_address_resposta') {
+        this.temProdutosIn = States.LOAD;
 
-        const produtosSemIn = this.produtos.filter(x => x.wt !== WT.IN);
+        if (data.status === "ok" && data.dados) {
+          const produtosInEndereco = data.dados as ResponseGetAddress[];
 
-        const produtosAtualizados = [
-          ...produtosSemIn,
-          ...novosProdutos.map(x => ({
-            fardo: x.fardo,
-            isEdit: false,
-            produto: x.produto,
-            quantidade: x.quantidade,
-            quebra: x.quebra,
-            wt: WT.IN,
-            codigo: x.codigo,
-            descricao: x.descricao,
-            modelo: x.modelo
-          }))
-        ];
+          const produtosSemIn = this.produtos.filter(x => x.propsPST.origem !== Origem.IN);
 
-        this.produtos = produtosAtualizados;
-        console.log('this.produtos', this.produtos);
-        this.temProdutosIn = States.COMPLETE
+          const novosProdutosIn: ProdutoSpDto[] = produtosInEndereco.map(p => ({
+            produtoId: p.ProdutoId,
+            codigo: p.Codigo,
+            descricao: p.Descricao,
+            lote: p.Lote,
+            dataf: p.DataF,
+            semf: p.SemF,
+            quantidade: p.Quantidade,
+            enderecoId: p.EstoqueId,
+            propsPST: { isModified: false, origem: Origem.IN } as PropsPST
+          }));
+
+          this.produtos = [...produtosSemIn, ...novosProdutosIn];
+        }
+        else{
+          this._snackBar.open(data.mensagem, "OK");
+        }
+        this.temProdutosIn = States.COMPLETE;
         this.loadingService.hide();
-
       }
+
       else if (data.type === 'entrada_resposta') {
         // this.loadingService.hide();
         if (data.status === 'ok') {
@@ -126,24 +143,23 @@ export class EntradaModal extends ModalBase implements OnInit {
   }
 
   existWTIN(): Boolean {
-    return this.produtos.some(p => p.wt === WT.IN);
+    return this.produtos.some(p => p.propsPST.origem === this.WT.IN);
   }
 
-  getProdutosFiltrados(): ProdutoIO[] {
-    return this.produtos.filter(p => p.wt !== WT.IN);
+  getProdutosFiltrados(): ProdutoSpDto[] {
+    return this.produtos.filter(p => p.propsPST.origem === this.WT.IN);
   }
 
   getAddress() {
 
-    if (!this.local || !this.rua || !this.coluna || !this.palete) {
+    if (!this.rua || !this.bloco || !this.apt) {
       alert('Preencha todos os campos antes de continuar.');
       return;
     }
     const add = {
-      local: this.local,
       rua: this.rua,
-      coluna: this.coluna,
-      palete: this.palete
+      bloco: this.bloco,
+      apt: this.apt
     };
 
     this.wsService.send({
@@ -156,7 +172,7 @@ export class EntradaModal extends ModalBase implements OnInit {
   submit() {
 
     if (this.wsService.UserCurrent) {
-      const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
+      const produtoInsert = this.produtos.filter(x => x.propsPST.origem === this.WT.IN);
 
 
       if (produtoInsert.length <= 0) {
@@ -164,52 +180,52 @@ export class EntradaModal extends ModalBase implements OnInit {
         return
       }
 
-      const produtosList = this.produtos
-        .filter(p => p.wt === WT.OUT)
-        .map(p => {
-          const fardo = p.fardo ? Number(p.fardo) : 0;
-          const quantidade = p.quantidade ? Number(p.quantidade) : 0;
-          const quebra = p.quebra ? Number(p.quebra) : 0;
-          const total = fardo * quantidade + quebra;
+      // const produtosList = this.produtos
+      //   .filter(p =>  x.propsPST.origem === origin)
+      //   .map(p => {
+      //     const fardo = p.fardo ? Number(p.fardo) : 0;
+      //     const quantidade = p.quantidade ? Number(p.quantidade) : 0;
+      //     const quebra = p.quebra ? Number(p.quebra) : 0;
+      //     const total = fardo * quantidade + quebra;
 
-          return {
-            codigo: p.codigo,
-            descricao: p.descricao,
-            fardo,
-            quantidade,
-            quebra,
-            total
-          };
-        });
+      //     return {
+      //       codigo: p.codigo,
+      //       descricao: p.descricao,
+      //       fardo,
+      //       quantidade,
+      //       quebra,
+      //       total
+      //     };
+      //   });
 
 
 
-      const movimentacaoDto: EntradaDto = {
-        user: this.wsService.UserCurrent.userId,
-        data: new Date().toISOString(),
-        endereco: {
-          local: this.local,
-          rua: this.rua,
-          coluna: this.coluna,
-          palete: this.palete
-        },
-        observacoes: this.observacao,
-        produtos: produtosList
-      };
+      // const movimentacaoDto: EntradaDto = {
+      //   userId: this.wsService.UserCurrent.userId,
+      //   // data: new Date().toISOString(),
+      //   // endereco: {
+      //   //   local: this.local,
+      //   //   rua: this.rua,
+      //   //   coluna: this.bloco,
+      //   //   palete: this.apt
+      //   // },
+      //   // observacoes: this.observacao,
+      //   // produtos: produtosList
+      // };
 
-      this.wsService.send({
-        action: 'entrada',
-        dados: movimentacaoDto
-      });
+      // this.wsService.send({
+      //   action: 'entrada',
+      //   dados: movimentacaoDto
+      // });
       this.loadingService.show();
     }
 
   }
 
-  enviar($event: AddProduto) {
+  enviar($event: ProdutoSpDto) {
 
     if ($event) {
-      this.produtos.push({ codigo: $event.codigo, quantidade: $event.quantidade, fardo: $event.fardo, quebra: $event.quebra, wt: WT.OUT })
+      this.produtos.push($event)
     }
   }
 
@@ -217,25 +233,24 @@ export class EntradaModal extends ModalBase implements OnInit {
     this.produtos = [];
     this.temProdutosIn = States.NONE;
 
-    this.local = '';
     this.rua = '';
-    this.coluna = '';
-    this.palete = '';
+    this.bloco = '';
+    this.apt = '';
     this.observacao = '';
 
-    this.formData = {
-      codigo: '',
-      fardo: 0,
-      quantidade: 0,
-      quebra: 0,
-    };
+    // this.formData = {
+    //   codigo: '',
+    //   // fardo: 0,
+    //   quantidade: 0,
+    //   // quebra: 0,
+    // };
   }
   showTooltip() {
     this.tooltipDisabled = false;
     setTimeout(() => this.tooltipDisabled = true, 2000);
   }
 
-  mostrarDescricao(item: ProdutoIO) {
+  mostrarDescricao(item: ProdutoSpDto) {
     this.dialog.open(DialogDescricaoComponent, {
       data: { descricao: item.descricao },
       panelClass: 'descricao-dialog-panel',
@@ -243,9 +258,9 @@ export class EntradaModal extends ModalBase implements OnInit {
     });
   }
 
-  deletarItem(item: ProdutoIO) {
-    if (item.wt === WT.OUT) {
-      this.produtos = this.produtos.filter(p => p !== item);
-    }
+  deletarItem(item: ProdutoSpDto) {
+    // if (item.wt === WT.OUT) {
+    //   this.produtos = this.produtos.filter(p => p !== item);
+    // }
   }
 } 

@@ -148,3 +148,10 @@ textarea[readonly] {
   cursor: not-allowed;
 }
 
+@media (max-width: 700px){
+  .actions {
+    button{
+      width: 25%;
+    }
+  }
+}

@@ -54,6 +54,7 @@
   font-size: 0.9rem;
   width: 100%;
   box-sizing: border-box;
+  text-align: center;
 }
 
 /* Textarea maior */
@@ -100,4 +101,24 @@ textarea[readonly] {
   background-color: #e9ecef;
   color: #6c757d;
   cursor: not-allowed;
+}
+
+
+.datals{
+  width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.erro-msg {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border: 1px solid #d93025;
+  background-color: #ffecec;
 }

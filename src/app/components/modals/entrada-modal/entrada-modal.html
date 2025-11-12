@@ -6,32 +6,20 @@
   <section class="section-group">
     <legend>Localização</legend>
     <div class="form-grid">
-      <div class="form-group">
-        <label>Local:</label>
-        <select [(ngModel)]="local" name="local">
-          <option>CD</option>
-          <option>E</option>
-          <option>L</option>
-        </select>
-      </div>
+      
 
       <div class="form-group">
         <label>Rua:</label>
         <select [(ngModel)]="rua" name="rua" required>
-          <option>A</option>
-          <option>B</option>
-          <option>C</option>
-          <option>D</option>
-          <option>E</option>
-          <option>F</option>
-          <option>G</option>
-          <option>H</option>
+          <option *ngFor="let letra of ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']">
+    {{ letra }}
+  </option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>Coluna:</label>
-        <select [(ngModel)]="coluna" name="coluna" required>
+        <label>Bloco:</label>
+        <select [(ngModel)]="bloco" name="bloco" required>
           <option>1</option>
           <option>2</option>
           <option>3</option>
@@ -46,8 +34,8 @@
       </div>
 
       <div class="form-group">
-        <label>Palete:</label>
-        <select [(ngModel)]="palete" name="palete" required>
+        <label>Apt:</label>
+        <select [(ngModel)]="apt" name="apt" required>
           <option>1</option>
           <option>2</option>
           <option>3</option>
@@ -82,29 +70,31 @@
   <thead>
     <tr>
       <th>Código</th>
-      <th>Fardo</th>
+      <!-- <th>Descrição</th> -->
       <th>Quant.</th>
-      <th>Quebra</th>
+      <th>Data Fab.</th>
+      <th>Sem Fab.</th>
+      <th>Lote</th>
       <th>Ações</th>
     </tr>
   </thead>
   <tbody>
     @for (item of produtos; track $index) {
-      <tr [ngClass]="{'wt-in': item.wt === WT.IN, 'wt-out': item.wt === WT.OUT}">
+      <tr [ngClass]="{'wt-in': item.propsPST.origem}">
         
-        <!-- Ao clicar no código mostra um dialog/alert -->
         <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
           {{ item.codigo }}
         </td>
 
-        <td>{{ item.fardo }}</td>
+        <!-- <td>{{ item.descricao }}</td> -->
         <td>{{ item.quantidade }}</td>
-        <td>{{ item.quebra }}</td>
+        <td>{{ item.dataf }}</td>
+        <td>{{ item.semf }}</td>
+        <td>{{ item.lote }}</td>
         
-        <!-- Botão de deletar só habilita se for OUT -->
         <td>
           <button mat-icon-button color="warn"
-                  [disabled]="item.wt !== WT.OUT"
+                  [disabled]="item.propsPST.origem !== WT.OUT"
                   (click)="deletarItem(item)">
             <mat-icon>delete</mat-icon>
           </button>
