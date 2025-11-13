@@ -31,7 +31,7 @@
   <input type="text" [(ngModel)]="entradaPesquisa" placeholder="Pesquisar...">
 </div>
 
-<section class="cart-main">
+<!-- <section class="cart-main">
 
   <div *ngFor="let item of filtrados" class="card">
     <table class="estoque-table">
@@ -60,9 +60,60 @@
       <button (click)="correcaoModal.openx(item)" class="corretion"><mat-icon>edit</mat-icon>CORREÇÃO</button>
     </div>
   </div>
+</section> -->
+
+<section>
+  <mat-card *ngFor="let item of filtrados" class="estoque-card">
+    <mat-card-header>
+      <mat-card-title>{{ item.produto?.codigo }} - {{ item.produto?.descricao }}</mat-card-title>
+      <mat-card-subtitle>Endereço: {{ item.enderecoId }} | Qtd: {{ item.quantidade }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="data-grid">
+        <div class="data-item">
+          <span class="label">Data de Fabricação:</span>
+          <span class="value">{{ item.dataF }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label">Semana de Fabricação:</span>
+          <span class="value">{{ item.semF }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label">Data de Lançamento:</span>
+          <span class="value">{{ item.dataL | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="data-item full-width">
+          <span class="label">Observação:</span>
+          <span class="value">{{ item.obs || 'N/A' }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label timestamp-label">Criado em:</span>
+          <span class="value">{{ item.createAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label timestamp-label">Atualizado em:</span>
+          <span class="value">{{ item.updateAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions class="acoes">
+      <button mat-flat-button color="warn" (click)="saidaModal.openx(item)" class="output-btn">
+        <mat-icon>exit_to_app</mat-icon>
+        SAÍDA
+      </button>
+      <button mat-flat-button color="primary" (click)="transferenciaModal.openx(item)" class="transfer-btn">
+        <mat-icon>swap_horiz</mat-icon>
+        TRANSFERÊNCIA
+      </button>
+      <button mat-flat-button color="accent" (click)="correcaoModal.openx(item)" class="corretion-btn">
+        <mat-icon>edit</mat-icon>
+        CORREÇÃO
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </section>
-
-
 
 <app-entrada-modal #entradaModal (submitForm)="enviar($event)"></app-entrada-modal>
 <app-saida-modal #saidaModal (submitForm)="enviar($event)"></app-saida-modal>

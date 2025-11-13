@@ -1,7 +1,8 @@
 import os from '@angular/common/locales/os';
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../components/modals/login/login';
+import { LoadingService } from '../components/modals/loading-page/LoadingService.service';
 
 @Injectable({
   providedIn: 'root' // garante singleton
@@ -12,28 +13,28 @@ export class WebSocketService {
 
   private _status = new BehaviorSubject<string>('Desconectado');
   private _messages = new BehaviorSubject<any>(null);
-
+  private loadingService: LoadingService = inject(LoadingService)
   private isConnected = false;
 
   private reconnectTimeout: any;
-  private wsCurrent!:string;
+  private wsCurrent!: string;
 
   constructor(zone: NgZone) {
     this.zone = zone;
   }
 
 
-  UserCurrent: User|null = null;
-  
-  reconnect(){
+  UserCurrent: User | null = null;
+
+  reconnect() {
     if (this.wsCurrent) {
       this.connect(this.wsCurrent)
     }
   }
-  connect(ws:string) {
+  connect(ws: string) {
     if (this.isConnected) return;
-    this.wsCurrent = ws;   
-    
+    this.wsCurrent = ws;
+
     this.socket = new WebSocket(this.wsCurrent);
 
     this.socket.onopen = () => {
@@ -41,6 +42,10 @@ export class WebSocketService {
         console.log('🔗 Conectado ao servidor WebSocket');
         this._status.next('Conectado');
         this.isConnected = true;
+        this.loadingService.hide();
+
+
+
       });
     };
 
@@ -51,8 +56,8 @@ export class WebSocketService {
 
     this.socket.onerror = (err) => this.zone.run(() => this._status.next('Erro de Conexão'));
     this.socket.onclose = this.handleClose;
-   
-   
+
+
   }
 
   disconnect() {

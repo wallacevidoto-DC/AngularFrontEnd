@@ -1,5 +1,5 @@
 export interface EntradaDto {
-    tipo: "ENTRADA";
+    tipo?: "ENTRADA";
     rua: string;
     bloco: string;
     apt: string;

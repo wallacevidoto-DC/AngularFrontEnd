@@ -3,10 +3,9 @@ import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular
 import { FormsModule } from '@angular/forms';
 import { BaseModalComponent, ModalBase } from '../base-modal/base-modal.component';
 import { WebSocketService } from '../../../service/ws.service';
-import { SaidaFormDataIn, SaidaFormDataOut } from '../saida-modal/saida-modal';
 import { CorrecaoType } from '../../../types/correcao.type';
 import { LoadingService } from '../loading-page/LoadingService.service';
-import { EstoqueItem } from '../../estoque/estoque';
+import { EstoqueItem } from '../../estoque/index.interface';
 
 @Component({
   selector: 'app-correcao-modal',
@@ -33,7 +32,7 @@ export class CorrecaoModal extends ModalBase implements OnInit {
     quebra: 0,
     total: 0,
     observacao: ''
-  } as SaidaFormDataIn;
+  } as any;
 
   formDataOut = {
     estoqueId: 0,
@@ -41,7 +40,7 @@ export class CorrecaoModal extends ModalBase implements OnInit {
     quantidade: 0,
     quebra: 0,
     observacao: '',
-  } as SaidaFormDataOut;
+  } as any;
 
 
   ngOnInit(): void {
@@ -96,11 +95,11 @@ export class CorrecaoModal extends ModalBase implements OnInit {
     if (this.wsService.UserCurrent) {
       this.calcularTotal();
 
-      const product: SaidaFormDataOut = { ...this.formDataOut, };
+      const product: any = { ...this.formDataOut, };
       const datas: CorrecaoType = {
         action: 'correcao',
         observacao: this.formDataOut.observacao,
-        user: this.wsService.UserCurrent.userId,
+        user: this.wsService.UserCurrent.UserId,
         product
       };
       this.wsService.send(datas);

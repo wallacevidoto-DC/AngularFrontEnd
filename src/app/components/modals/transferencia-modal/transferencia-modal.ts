@@ -2,14 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseModalComponent, ModalBase } from "../base-modal/base-modal.component";
-import { SaidaFormDataIn, SaidaFormDataOut } from '../saida-modal/saida-modal';
-import { SaidaType } from '../../../types/saida.type';
 import { MatIconModule } from '@angular/material/icon';
-import { EntradaDto, ProdutoIO, WT } from '../entrada-modal/entrada-modal';
 import { WebSocketService } from '../../../service/ws.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingService } from '../loading-page/LoadingService.service';
-import { EstoqueItem } from '../../estoque/estoque';
+import { Origem } from '../entrada-modal/index.interface';
+import { EstoqueItem } from '../../estoque/index.interface';
 
 export interface TransferenciaDto {
   user: number;
@@ -37,9 +35,9 @@ export class TransferenciaModal extends ModalBase {
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
 
-  public WT = WT;
+  public WT = Origem;
   public States = States;
-  produtos: ProdutoIO[] = []
+  produtos: any[] = []
   temProdutosIn: States = States.NONE;
   tooltipDisabled = true;
 
@@ -62,26 +60,26 @@ export class TransferenciaModal extends ModalBase {
 
       if (data.type === 'in_address' && data.produtos) {
         this.temProdutosIn = States.LOAD
-        const novosProdutos = data.produtos as ProdutoIO[];
+        const novosProdutos = data.produtos as any[];
 
-        const produtosSemIn = this.produtos.filter(x => x.wt !== WT.IN);
+        // const produtosSemIn = this.produtos.filter(x => x.wt !== WT.IN);
 
-        const produtosAtualizados = [
-          ...produtosSemIn,
-          ...novosProdutos.map(x => ({
-            fardo: x.fardo,
-            isEdit: false,
-            produto: x.produto,
-            quantidade: x.quantidade,
-            quebra: x.quebra,
-            wt: WT.IN,
-            codigo: x.codigo,
-            descricao: x.descricao,
-            modelo: x.modelo
-          }))
-        ];
+        // const produtosAtualizados = [
+        //   ...produtosSemIn,
+        //   ...novosProdutos.map(x => ({
+        //     fardo: x.fardo,
+        //     isEdit: false,
+        //     produto: x.produto,
+        //     quantidade: x.quantidade,
+        //     quebra: x.quebra,
+        //     wt: WT.IN,
+        //     codigo: x.codigo,
+        //     descricao: x.descricao,
+        //     modelo: x.modelo
+        //   }))
+        // ];
 
-        this.produtos = produtosAtualizados;
+        // this.produtos = produtosAtualizados;
         console.log('this.produtos', this.produtos);
         this.temProdutosIn = States.COMPLETE
         this.loadingService.hide();
@@ -108,21 +106,22 @@ export class TransferenciaModal extends ModalBase {
   openx(itemData: EstoqueItem) {
     this.onClear()
     console.log('itemData', itemData);
-    this.enderecoOld = itemData.enderecoId??''
+    this.enderecoOld = itemData.enderecoId ?? ''
     this.isOpen = true;
     if (itemData) {
       this.formData = { ...itemData };
-      this.produtos.push({ codigo: itemData.produto?.codigo, quantidade: itemData.quantidade, quebra: itemData.quantidade, wt: WT.OUT })
+      // this.produtos.push({ codigo: itemData.produto?.codigo, quantidade: itemData.quantidade, quebra: itemData.quantidade, wt: WT.OUT })
     }
 
   }
 
   existWTIN(): Boolean {
-    return this.produtos.some(p => p.wt === WT.IN);
+    // return this.produtos.some(p => p.wt === WT.IN);ret 
+    return false
   }
 
-  getProdutosFiltrados(): ProdutoIO[] {
-    return this.produtos.filter(p => p.wt !== WT.IN);
+  getProdutosFiltrados() {
+    // return this.produtos.filter(p => p.wt !== WT.IN);
   }
 
   getAddress() {
@@ -147,7 +146,7 @@ export class TransferenciaModal extends ModalBase {
   submit() {
 
     if (this.wsService.UserCurrent) {
-      const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
+      // const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
 
       const produtosList = this.produtos
         .map(p => {
@@ -168,7 +167,7 @@ export class TransferenciaModal extends ModalBase {
 
 
       const movimentacaoDto: TransferenciaDto = {
-        user: this.wsService.UserCurrent.userId,
+        user: this.wsService.UserCurrent.UserId,
         data: new Date().toISOString(),
         estoqueId: this.formData.estoqueId,
         endereco: {

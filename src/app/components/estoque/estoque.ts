@@ -12,29 +12,8 @@ import { LoginModalComponent } from '../../components/modals/login/login';
 import { MatDialog } from '@angular/material/dialog';
 import { LoadingPage } from "../../components/modals/loading-page/loading-page";
 import { LoadingService } from '../../components/modals/loading-page/LoadingService.service';
-
-
-
-export interface Produto {
-  codigo: string;
-  descricao: string;
-}
-
-export interface EstoqueItem {
-  estoqueId: number;
-  enderecoId?: string | null;
-  produtoId: number;
-  semF: number;
-  quantidade: number;
-  dataF: string;
-  dataL: string;
-  lote?: string | null;
-  obs?: string | null;
-  createAt: string;
-  updateAt: string;
-  produto?: Produto | null;
-}
-
+import { MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard } from "@angular/material/card";
+import { EstoqueItem } from './index.interface';
 
 @Component({
   selector: 'app-estoque',
@@ -43,7 +22,7 @@ export interface EstoqueItem {
     SaidaModal,
     TransferenciaModal,
     CorrecaoModal, MatButtonModule,
-    MatIconModule, LoadingPage],
+    MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard],
   templateUrl: './estoque.html',
   styleUrl: './estoque.scss'
 })

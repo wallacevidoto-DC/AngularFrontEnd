@@ -10,10 +10,11 @@ import { LoadingService } from '../loading-page/LoadingService.service';
 
 
 export interface User {
-  userId: number;
-  name: string;
-  password?: string;
-  create_at: string;
+  UserId: number
+  Name: string
+  Password: any
+  Role: number
+  CreateAt: string
 }
 
 @Component({

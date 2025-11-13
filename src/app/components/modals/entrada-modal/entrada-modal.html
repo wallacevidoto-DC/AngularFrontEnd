@@ -9,14 +9,15 @@
   <section class="section-group">
     <legend>Localização</legend>
     <div class="form-grid">
-      
+
 
       <div class="form-group">
         <label>Rua:</label>
         <select [(ngModel)]="rua" name="rua" required>
-          <option *ngFor="let letra of ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']">
-    {{ letra }}
-  </option>
+          <option
+            *ngFor="let letra of ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']">
+            {{ letra }}
+          </option>
         </select>
       </div>
 
@@ -52,8 +53,8 @@
         </select>
       </div>
     </div>
+    <button class="icon-btn" (click)="getAddress()" style="height: 50px; border-radius: 10px; width: 100%;">🔍 Buscar</button>
 
-    <button class="icon-btn" (click)="getAddress()" style="height: 50px; border-radius: 10px;">🔍 Buscar</button>
 
     @if (temProdutosIn === States.COMPLETE && existWTIN()) {
     <p class="merge-msg">
@@ -69,51 +70,51 @@
 
   <section class="section-group">
     <legend>Dados do Produto</legend>
-    <table class="produtos-table"> 
-  <thead>
-    <tr>
-      <th>Código</th>
-      <!-- <th>Descrição</th> -->
-      <th>Quant.</th>
-      <th>Data Fab.</th>
-      <th>Sem Fab.</th>
-      <th>Lote</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (item of produtos; track $index) {
-      <tr  [ngClass]="{
+    <table class="produtos-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <!-- <th>Descrição</th> -->
+          <th>Quant.</th>
+          <th>Data Fab.</th>
+          <th>Sem Fab.</th>
+          <th>Lote</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of produtos; track $index) {
+        <tr [ngClass]="{
     'wt-in': item.propsPST.origem === Origem.IN,
     'wt-out': item.propsPST.origem === Origem.OUT
   }">
-        
-        <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
-          {{ item.codigo }}
-        </td>
 
-        <!-- <td>{{ item.descricao }}</td> -->
-        <td>{{ item.quantidade }}</td>
-        <td>{{ item.dataf }}</td>
-        <td>{{ item.semf }}</td>
-        <td>{{ item.lote }}</td>
-        
-        <td>
-          <button mat-icon-button color="warn"
-                  [disabled]="item.propsPST.origem !== WT.OUT"
-                  (click)="deletarItem(item)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
+          <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
+            {{ item.codigo }}
+          </td>
 
-      </tr>
-    }
-  </tbody>
-</table>
+          <!-- <td>{{ item.descricao }}</td> -->
+          <td>{{ item.quantidade }}</td>
+          <td>{{ item.dataf }}</td>
+          <td>{{ item.semf }}</td>
+          <td>{{ item.lote }}</td>
+
+          <td>
+            <button mat-icon-button color="warn" [disabled]="item.propsPST.origem !== WT.OUT"
+              (click)="deletarItem(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+
+        </tr>
+        }
+      </tbody>
+    </table>
 
 
     <div class="actions">
-      <button style="font-size: xx-small;background-color: rgba(0, 102, 255, 0.308);" (click)="addProduto.openx();OpenSub=false;">
+      <button style="font-size: xx-small;background-color: rgba(0, 102, 255, 0.308);"
+        (click)="addProduto.openx();OpenSub=false;">
         <mat-icon>add_circle</mat-icon>Adicionar</button>
       <!-- <button style="font-size: xx-small;background-color: rgba(255, 0, 0, 0.404);">
         <mat-icon>remove_circle</mat-icon>Remover</button> -->

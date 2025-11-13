@@ -3,56 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalBase, BaseModalComponent } from '../base-modal/base-modal.component';
 import { WebSocketService } from '../../../service/ws.service';
-import { Pipe, PipeTransform } from '@angular/core';
-import { FilterWT } from "../../../pipe/filterWT";
 import { AddProduto, AddProdutoModal } from '../add-produto-modal/add-produto-modal';
-import { SaidaType } from '../../../types/saida.type';
 import { MatIconModule } from '@angular/material/icon'
 import { States } from '../transferencia-modal/transferencia-modal';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
 import { LoadingService } from '../loading-page/LoadingService.service';
-import { Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from './index.interface';
+import { EntradaDto, Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from './index.interface';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-
-export enum WT {
-  NONE = "NONE",
-  IN = "IN",
-  OUT = "OUT"
-}
-
-export interface ProdutoIO {
-  isEdit?: boolean
-  codigo?: string
-  descricao?: string
-  produto?: string
-  fardo?: number
-  quantidade?: number
-  quebra?: number
-  modelo?: string
-  wt?: WT
-}
-export interface EntradaDto {
-  user: number;
-  data: string;
-  endereco: Record<string, string>;
-  observacoes?: string;
-  produtos: Array<Record<string, any>>;
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 @Component({
   selector: 'app-entrada-modal',
@@ -71,7 +30,7 @@ export class EntradaModal extends ModalBase implements OnInit {
   protected OpenSub: boolean = true;
 
   public WT = Origem;
-  public Origem=Origem;
+  public Origem = Origem;
   tooltipDisabled = true;
   produtos: ProdutoSpDto[] = []
   public States = States;
@@ -117,11 +76,10 @@ export class EntradaModal extends ModalBase implements OnInit {
         this.temProdutosIn = States.COMPLETE;
         this.loadingService.hide();
       }
-
       else if (data.type === 'entrada_resposta') {
-        // this.loadingService.hide();
+        this.loadingService.hide();
         if (data.status === 'ok') {
-          this.submitForm.emit()
+          // this.submitForm.emit()
           this.onCloseBase()
         }
         else {
@@ -173,51 +131,28 @@ export class EntradaModal extends ModalBase implements OnInit {
   submit() {
 
     if (this.wsService.UserCurrent) {
-      const produtoInsert = this.produtos.filter(x => x.propsPST.origem === this.WT.IN);
-
+      const produtoInsert = this.produtos.filter(p => p.propsPST.origem === Origem.OUT);
 
       if (produtoInsert.length <= 0) {
         alert('Adicione ao menos um produto.');
         return
       }
+      const movimentacaoDto: EntradaDto = {
+        userId: this.wsService.UserCurrent.UserId,
+        dataEntrada: new Date(),
+        rua: this.rua,
+        bloco: this.bloco,
+        apt: this.apt,
+        observacao: this.observacao,
+        produtos: produtoInsert
+      };
 
-      // const produtosList = this.produtos
-      //   .filter(p =>  x.propsPST.origem === origin)
-      //   .map(p => {
-      //     const fardo = p.fardo ? Number(p.fardo) : 0;
-      //     const quantidade = p.quantidade ? Number(p.quantidade) : 0;
-      //     const quebra = p.quebra ? Number(p.quebra) : 0;
-      //     const total = fardo * quantidade + quebra;
-
-      //     return {
-      //       codigo: p.codigo,
-      //       descricao: p.descricao,
-      //       fardo,
-      //       quantidade,
-      //       quebra,
-      //       total
-      //     };
-      //   });
-
-
-
-      // const movimentacaoDto: EntradaDto = {
-      //   userId: this.wsService.UserCurrent.userId,
-      //   // data: new Date().toISOString(),
-      //   // endereco: {
-      //   //   local: this.local,
-      //   //   rua: this.rua,
-      //   //   coluna: this.bloco,
-      //   //   palete: this.apt
-      //   // },
-      //   // observacoes: this.observacao,
-      //   // produtos: produtosList
-      // };
-
-      // this.wsService.send({
-      //   action: 'entrada',
-      //   dados: movimentacaoDto
-      // });
+      console.log('movimentacaoDto:',movimentacaoDto);
+      
+      this.wsService.send({
+        action: 'entrada',
+        data: movimentacaoDto
+      });
       this.loadingService.show();
     }
 
