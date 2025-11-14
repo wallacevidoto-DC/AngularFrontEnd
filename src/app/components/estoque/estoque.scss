@@ -1,40 +1,46 @@
+/* === TOOLBAR === */
 .toolbar {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end; /* botão no lado direito */
   padding: 10px;
   background: white;
   border-bottom: 1px solid #ddd;
 }
 
 .toolbar button {
-  flex: 1;
-  margin: 0 3px;
-  padding: 12px;
-  font-size: 18px;
+  padding: 12px 18px;
+  font-size: 16px;
   border: none;
-  background: #2d6cdf;
+  background: #1a73e8; /* azul Google */
   color: white;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
-
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: background 0.2s;
 }
 
 .toolbar button:hover {
-  background: #1b4fad;
+  background: #1666c3;
 }
 
+/* === FILTER BAR === */
 .filter-bar {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   padding: 12px;
   background: #fff;
   border-bottom: 1px solid #ddd;
+}
+
+.filter-bar select {
+  width: 200px; /* tamanho fixo em desktop */
+}
+
+.filter-bar input {
+  flex: 1; /* entradaPesquisa maior */
 }
 
 .filter-bar select,
@@ -43,7 +49,34 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 16px;
+  background: #fafafa;
 }
+
+/* === RESPONSIVO (CELULAR) === */
+@media (max-width: 600px) {
+  .toolbar {
+    justify-content: stretch;
+  }
+  
+  .toolbar button {
+    width: 100%;
+            display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+    
+  }
+
+  .filter-bar {
+    flex-direction: column;
+  }
+
+  .filter-bar select,
+  .filter-bar input {
+    width: 100%;
+  }
+}
+
 
 .tabela-container {
   padding: 12px;

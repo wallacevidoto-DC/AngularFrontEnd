@@ -30,6 +30,7 @@
               }
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ]
@@ -62,10 +63,16 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "AngularFrontEnd:build:production"
+              "buildTarget": "AngularFrontEnd:build:production",
+              "ssl": true,
+              "sslKey": "src/ssl/key.pem",
+              "sslCert": "src/ssl/cert.pem"
             },
             "development": {
-              "buildTarget": "AngularFrontEnd:build:development"
+              "buildTarget": "AngularFrontEnd:build:development",
+              "ssl": true,
+              "sslKey": "src/ssl/key.pem",
+              "sslCert": "src/ssl/cert.pem"
             }
           },
           "defaultConfiguration": "development"

@@ -12,6 +12,7 @@ import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
 import { LoadingService } from '../loading-page/LoadingService.service';
 import { EntradaDto, Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from './index.interface';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-entrada-modal',
@@ -26,6 +27,7 @@ export class EntradaModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
+  private toastr: ToastrService = inject(ToastrService);
   private _snackBar = inject(MatSnackBar);
   protected OpenSub: boolean = true;
 
@@ -79,11 +81,12 @@ export class EntradaModal extends ModalBase implements OnInit {
       else if (data.type === 'entrada_resposta') {
         this.loadingService.hide();
         if (data.status === 'ok') {
-          // this.submitForm.emit()
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
         }
         else {
-          alert(data.mensagem)
+          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
 
@@ -130,11 +133,16 @@ export class EntradaModal extends ModalBase implements OnInit {
 
   submit() {
 
+    if (!this.rua || !this.bloco || !this.apt) {
+    this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
+    return; 
+  }
+
     if (this.wsService.UserCurrent) {
       const produtoInsert = this.produtos.filter(p => p.propsPST.origem === Origem.OUT);
 
       if (produtoInsert.length <= 0) {
-        alert('Adicione ao menos um produto.');
+        this.toastr.warning('Adicione ao menos um produto.');
         return
       }
       const movimentacaoDto: EntradaDto = {
@@ -147,8 +155,8 @@ export class EntradaModal extends ModalBase implements OnInit {
         produtos: produtoInsert
       };
 
-      console.log('movimentacaoDto:',movimentacaoDto);
-      
+      console.log('movimentacaoDto:', movimentacaoDto);
+
       this.wsService.send({
         action: 'entrada',
         data: movimentacaoDto

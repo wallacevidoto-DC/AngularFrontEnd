@@ -1,0 +1,45 @@
+<div class="entrada-mercadoria-container">
+  
+  <h2>📦 Entrada de Mercadoria</h2>
+  
+  <div class="scanner-section">
+    <app-leitor-barcode 
+      (produtoEncontrado)="adicionarProduto($any($event))">
+    </app-leitor-barcode>
+  </div>
+
+  <hr>
+
+  
+  <div class="lista-entrada-section">
+    <h3>🛒 Produtos a Entrar ({{ produtosEntrada.length }})</h3>
+    
+    <table *ngIf="produtosEntrada.length > 0; else listaVazia">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descrição</th>
+          <th>Qtde</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of produtosEntrada">
+          <td>{{ item.Codigo }}</td>
+          <td>{{ item.Descricao }}</td>
+          <td>{{ item.quantidade }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <ng-template #listaVazia>
+      <p class="alerta">Nenhum produto adicionado ainda.</p>
+    </ng-template>
+
+    <button *ngIf="produtosEntrada.length > 0" 
+      class="finalizar-btn"
+      >
+      ✅ Finalizar Entrada (Enviar para o Estoque)
+    </button>
+  </div>
+
+</div>

@@ -42,7 +42,7 @@ export class App implements OnInit {
 
 
     if (ws_ip && ws_port) {
-      this.wsService.connect(`ws://${ws_ip}:${ws_port}`);
+      this.wsService.connect(`wss://${ws_ip}:${ws_port}`);
     } else {
       console.error("IP ou porta do WebSocket não encontrados na URL");
     }
@@ -69,7 +69,7 @@ export class App implements OnInit {
         localStorage.removeItem('user');
       }
     }
-    this.openLogin()
+    // this.openLogin()
   }
 
   openLogin() {

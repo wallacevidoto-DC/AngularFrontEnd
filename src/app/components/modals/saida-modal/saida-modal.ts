@@ -4,24 +4,25 @@ import { FormsModule } from '@angular/forms';
 import { BaseModalComponent, ModalBase } from "../base-modal/base-modal.component";
 import { WebSocketService } from '../../../service/ws.service';
 import { LoadingService } from '../loading-page/LoadingService.service';
-import { ProdutoSpDto } from '../entrada-modal/index.interface';
 import { SaidaDto } from './index.interface';
 import { EstoqueItem } from '../../estoque/index.interface';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-saida-modal',
   imports: [CommonModule, FormsModule, BaseModalComponent],
   templateUrl: './saida-modal.html',
-  styleUrl: './saida-modal.scss'
+  styleUrl: './saida-modal.scss',
 })
 export class SaidaModal extends ModalBase implements OnInit {
+
+
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
+  private toastr:ToastrService  = inject (ToastrService);
   protected formData: EstoqueItem | null = null;
   protected formDataQtd!: number;
   protected formDataObs: string | null = null;
-
 
   ngOnInit(): void {
 
@@ -30,14 +31,14 @@ export class SaidaModal extends ModalBase implements OnInit {
       if (!data) return;
 
       if (data.type === 'saida_resposta') {
+        this.loadingService.hide();
         if (data.status === 'ok') {
-          // this.submitForm.emit()
-          this.loadingService.hide();
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
         }
         else {
-          this.loadingService.hide();
-          alert(data.mensagem)
+         this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
     });
@@ -79,6 +80,7 @@ export class SaidaModal extends ModalBase implements OnInit {
     this.formData = null;
 
     this.formDataQtd = 0;
+    this.formDataObs=null
   }
 
 }

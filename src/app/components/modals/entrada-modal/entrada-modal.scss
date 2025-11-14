@@ -71,13 +71,14 @@
 }
 
 .wt-in {
-  background: #b4f096;
+  background-color: #CCFFCC;
 }
 
 .wt-out {
-  background: #7890f2;
-  color: #fff;
+  background-color: #CCE5FF;
+  color: #4b4b4b;
 }
+
 
 .actions {
   display: flex;
@@ -107,16 +108,9 @@
   padding: 4px 8px;
   border-radius: 4px;
   font-size: smaller;
+    text-align: center;
 }
 
-.legenda-item.wt-in {
-  background: #b4f096;
-}
-
-.legenda-item.wt-out {
-  background: #7890f2;
-  color: #fff;
-}
 
 .footer-actions {
   display: flex;

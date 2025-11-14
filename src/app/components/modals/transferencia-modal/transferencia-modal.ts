@@ -6,17 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { WebSocketService } from '../../../service/ws.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingService } from '../loading-page/LoadingService.service';
-import { Origem } from '../entrada-modal/index.interface';
+import { Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from '../entrada-modal/index.interface';
 import { EstoqueItem } from '../../estoque/index.interface';
+import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
+import { TransferenciaDto } from './index.interface';
 
-export interface TransferenciaDto {
-  user: number;
-  data: string;
-  estoqueId: number;
-  endereco: Record<string, string>;
-  observacoes?: string;
-  produtos: Array<Record<string, any>>;
-}
 
 export enum States {
   NONE, LOAD, COMPLETE
@@ -30,70 +27,75 @@ export enum States {
   styleUrl: './transferencia-modal.scss'
 })
 export class TransferenciaModal extends ModalBase {
-  @Output() submitForm = new EventEmitter<any>();
+
+
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
+  private toastr: ToastrService = inject(ToastrService);
+  private _snackBar = inject(MatSnackBar);
+  private dialog: MatDialog = inject(MatDialog)
+  protected OpenSub: boolean = true;
 
   public WT = Origem;
-  public States = States;
-  produtos: any[] = []
-  temProdutosIn: States = States.NONE;
+  public Origem = Origem;
   tooltipDisabled = true;
-
-
-
-  enderecoOld = 'SEM END'
-  local: string = '';
+  produtos: ProdutoSpDto[] = []
+  public States = States;
+  temProdutosIn: States = States.NONE;
   rua: string = '';
-  coluna: string = '';
-  palete: string = '';
-
+  bloco: string = '';
+  apt: string = '';
+  enderecoOld: string = ''
   observacao: string = '';
 
 
   ngOnInit(): void {
 
+
+
     this.wsService.messages$.subscribe(data => {
 
       if (!data) return;
+      this.loadingService.hide();
+      if (data.type === 'get_address_resposta') {
+        this.temProdutosIn = States.LOAD;
 
-      if (data.type === 'in_address' && data.produtos) {
-        this.temProdutosIn = States.LOAD
-        const novosProdutos = data.produtos as any[];
+        if (data.status === "ok" && data.dados) {
+          const produtosInEndereco = data.dados as ResponseGetAddress[];
 
-        // const produtosSemIn = this.produtos.filter(x => x.wt !== WT.IN);
+          const produtosSemIn = this.produtos.filter(x => x.propsPST.origem !== Origem.IN);
 
-        // const produtosAtualizados = [
-        //   ...produtosSemIn,
-        //   ...novosProdutos.map(x => ({
-        //     fardo: x.fardo,
-        //     isEdit: false,
-        //     produto: x.produto,
-        //     quantidade: x.quantidade,
-        //     quebra: x.quebra,
-        //     wt: WT.IN,
-        //     codigo: x.codigo,
-        //     descricao: x.descricao,
-        //     modelo: x.modelo
-        //   }))
-        // ];
+          const novosProdutosIn: ProdutoSpDto[] = produtosInEndereco.map(p => ({
+            produtoId: p.ProdutoId,
+            codigo: p.Codigo,
+            descricao: p.Descricao,
+            lote: p.Lote,
+            dataf: p.DataF,
+            semf: p.SemF,
+            quantidade: p.Quantidade,
+            enderecoId: p.EstoqueId,
+            propsPST: { isModified: false, origem: Origem.IN } as PropsPST
+          }));
 
-        // this.produtos = produtosAtualizados;
-        console.log('this.produtos', this.produtos);
-        this.temProdutosIn = States.COMPLETE
-        this.loadingService.hide();
+          this.produtos = [...produtosSemIn, ...novosProdutosIn];
+        }
+        else {
+          this.getProdutosFiltrados();
+          // this._snackBar.open(data.mensagem, "OK");
+        }
+        this.temProdutosIn = States.COMPLETE;
+
       }
       else if (data.type === 'transferencia_resposta') {
 
         if (data.status === 'ok') {
-          this.submitForm.emit()
-          // this.loadingService.hide();
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
         }
         else {
-          this.loadingService.hide();
-          alert(data.mensagem)
+          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
     });
@@ -105,85 +107,99 @@ export class TransferenciaModal extends ModalBase {
 
   openx(itemData: EstoqueItem) {
     this.onClear()
-    console.log('itemData', itemData);
     this.enderecoOld = itemData.enderecoId ?? ''
     this.isOpen = true;
     if (itemData) {
       this.formData = { ...itemData };
-      // this.produtos.push({ codigo: itemData.produto?.codigo, quantidade: itemData.quantidade, quebra: itemData.quantidade, wt: WT.OUT })
+      if (itemData.produto) {
+        const p = itemData.produto;
+
+        this.produtos.push({
+          produtoId: itemData.produtoId,
+          codigo: p.codigo,
+          descricao: p.descricao,
+          quantidade: itemData.quantidade,
+          dataf: itemData?.dataF,
+          semf: itemData?.semF,
+          lote: itemData.lote ?? '',
+          propsPST: {
+            origem: Origem.OUT,
+            isModified: false
+          }
+        });
+      }
     }
 
   }
 
   existWTIN(): Boolean {
-    // return this.produtos.some(p => p.wt === WT.IN);ret 
+    return this.produtos.some(p => p.propsPST.origem === Origem.IN);
     return false
   }
 
   getProdutosFiltrados() {
-    // return this.produtos.filter(p => p.wt !== WT.IN);
+    this.produtos = this.produtos.filter(p => p.propsPST.origem !== Origem.IN);
   }
 
   getAddress() {
 
-    if (!this.local || !this.rua || !this.coluna || !this.palete) {
+    if (!this.rua || !this.bloco || !this.apt) {
       alert('Preencha todos os campos antes de continuar.');
       return;
     }
     const add = {
-      local: this.local,
       rua: this.rua,
-      coluna: this.coluna,
-      palete: this.palete
+      bloco: this.bloco,
+      apt: this.apt
     };
 
     this.wsService.send({
       action: 'get_address',
       data: add
     });
+    this.loadingService.show();
   }
 
   submit() {
 
+    if (!this.rua || !this.bloco || !this.apt) {
+      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
+      return;
+    }
+
+
     if (this.wsService.UserCurrent) {
-      // const produtoInsert = this.produtos.filter(x => x.wt === WT.OUT)
-
-      const produtosList = this.produtos
-        .map(p => {
-          const fardo = p.fardo ? Number(p.fardo) : 0;
-          const quantidade = p.quantidade ? Number(p.quantidade) : 0;
-          const quebra = p.quebra ? Number(p.quebra) : 0;
-          const total = fardo * quantidade + quebra;
-
-          return {
-            codigo: p.codigo,
-            descricao: p.descricao,
-            fardo,
-            quantidade,
-            quebra,
-            total
-          };
-        });
 
 
       const movimentacaoDto: TransferenciaDto = {
-        user: this.wsService.UserCurrent.UserId,
-        data: new Date().toISOString(),
-        estoqueId: this.formData.estoqueId,
-        endereco: {
-          local: this.local,
-          rua: this.rua,
-          coluna: this.coluna,
-          palete: this.palete
-        },
-        observacoes: this.observacao,
-        produtos: produtosList
+        userId: this.wsService.UserCurrent.UserId,
+        dataEntrada: this.formData.dataL,
+        estoqueID: this.formData.estoqueId,
+        rua: this.rua,
+        bloco: this.bloco,
+        apt: this.apt,
+        //@ts-ignore
+        endOld: this.formData.enderecoId,
+        observacao: this.observacao,
+        produto: {
+          produtoId: this.formData.produtoId,
+          codigo: this.formData.produto?.codigo ?? '',
+          descricao: this.formData.produto?.descricao ?? '',
+          quantidade: this.formData.quantidade,
+          dataf: this.formData?.dataF,
+          semf: this.formData?.semF,
+          lote: this.formData.lote ?? '',
+          propsPST: {
+            origem: Origem.OUT,
+            isModified: false
+          }
+        }
 
       };
 
       this.wsService.send({
         action: 'transferencia',
-        dados: movimentacaoDto
+        data: movimentacaoDto
       });
       this.loadingService.show();
     }
@@ -191,22 +207,22 @@ export class TransferenciaModal extends ModalBase {
   }
 
   onClear() {
-    this.local = '';
     this.rua = '';
-    this.coluna = '';
-    this.palete = '';
-
+    this.bloco = '';
+    this.apt = '';
+    this.enderecoOld = ''
     this.observacao = '';
-
     this.produtos = [];
     this.temProdutosIn = States.NONE;
 
     // reseta formData
     this.formData = {} as EstoqueItem;
   }
-
-  showTooltip() {
-    this.tooltipDisabled = false;
-    setTimeout(() => this.tooltipDisabled = true, 2000);
+  mostrarDescricao(item: ProdutoSpDto) {
+    this.dialog.open(DialogDescricaoComponent, {
+      data: { descricao: item.descricao },
+      panelClass: 'descricao-dialog-panel',
+      hasBackdrop: true
+    });
   }
 }

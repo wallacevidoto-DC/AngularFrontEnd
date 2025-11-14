@@ -12,7 +12,7 @@
 
 
 <div class="toolbar">
-  <button (click)="entradaModal.openx()" title="Nova Entrada"><mat-icon>archive</mat-icon> Entrada <mat-icon>archive</mat-icon></button>
+  <button (click)="entradaModal.openx()" title="Nova Entrada"><mat-icon>archive</mat-icon> Nova Entrada</button>
 </div>
 
 <div class="filter-bar">
@@ -30,37 +30,6 @@
   </select>
   <input type="text" [(ngModel)]="entradaPesquisa" placeholder="Pesquisar...">
 </div>
-
-<!-- <section class="cart-main">
-
-  <div *ngFor="let item of filtrados" class="card">
-    <table class="estoque-table">
-      <tr><th>Endereco</th><td>{{ item.enderecoId }}</td></tr>
-      <tr><th>Código</th><td>{{ item.produto?.codigo }}</td></tr>
-      <tr><th>Descrição</th><td>{{ item.produto?.descricao }}</td></tr>
-      <tr><th>Qtd.</th>
-          <td>{{ item.quantidade }}</td>
-      </tr>
-      <tr><th>dataF</th><td>{{ item.dataF | date:'dd/MM/yyyy HH:mm:ss'  }}</td></tr>
-       <tr><th>semF</th><td>{{ item.semF }}</td></tr>
-      <tr><th>dataL</th><td>{{ item.dataL  | date:'dd/MM/yyyy HH:mm:ss'  }}</td></tr>
-       <tr><th>Obs</th><td>{{ item.obs }}</td></tr>
-       <br>
-        <tr >
-          <th>Criado</th><td>{{ item.createAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        </tr>
-        <tr >
-          <th>Atualizado</th><td>{{ item.updateAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        </tr>
-    </table>
-  
-    <div class="acoes">
-      <button (click)="saidaModal.openx(item)" class="output"><mat-icon>exit_to_app</mat-icon>SAÍDA</button>
-      <button (click)="transferenciaModal.openx(item)" class="transfer"><mat-icon>swap_horiz</mat-icon>TRANSFERÊNCIA</button>
-      <button (click)="correcaoModal.openx(item)" class="corretion"><mat-icon>edit</mat-icon>CORREÇÃO</button>
-    </div>
-  </div>
-</section> -->
 
 <section>
   <mat-card *ngFor="let item of filtrados" class="estoque-card">

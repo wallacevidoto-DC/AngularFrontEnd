@@ -2,71 +2,57 @@
   icon="swap_horiz">
 
 
-  <!-- Localização -->
   <section class="section-group">
-    <legend>Localização : {{enderecoOld}}</legend>
+    <legend>Localização : Endereço atual ~> {{enderecoOld}}</legend>
 
-    <div class="section-group">
-      <legend>Novo Endereço</legend>
-      <div class="form-grid ">
-        <div class="form-group">
-          <label>Local:</label>
-          <select [(ngModel)]="local" name="local">
-            <option>CD</option>
-            <option>E</option>
-            <option>L</option>
-          </select>
-        </div>
+    <div class="form-grid">
 
-        <div class="form-group">
-          <label>Rua:</label>
-          <select [(ngModel)]="rua" name="rua" required>
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
-            <option>D</option>
-            <option>E</option>
-            <option>F</option>
-            <option>G</option>
-            <option>H</option>
-          </select>
-        </div>
 
-        <div class="form-group">
-          <label>Coluna:</label>
-          <select [(ngModel)]="coluna" name="coluna" required>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
-          </select>
-        </div>
+      <div class="form-group">
+        <label>Rua:</label>
+        <select [(ngModel)]="rua" name="rua" required>
+          <option
+            *ngFor="let letra of ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']">
+            {{ letra }}
+          </option>
+        </select>
+      </div>
 
-        <div class="form-group">
-          <label>Palete:</label>
-          <select [(ngModel)]="palete" name="palete" required>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
-          </select>
-        </div>
+      <div class="form-group">
+        <label>Bloco:</label>
+        <select [(ngModel)]="bloco" name="bloco" required>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Apt:</label>
+        <select [(ngModel)]="apt" name="apt" required>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+        </select>
       </div>
     </div>
+    <button class="icon-btn" (click)="getAddress()" style="height: 50px; border-radius: 10px; width: 100%;">🔍
+      Buscar</button>
 
-    <button class="icon-btn" (click)="getAddress()" style="height: 50px; border-radius: 10px;">🔍 Buscar</button>
 
     @if (temProdutosIn === States.COMPLETE && existWTIN()) {
     <p class="merge-msg">
@@ -78,7 +64,6 @@
 
     <p class="merge-msg-disp">Disponível</p>
     }
-
   </section>
 
   <section class="section-group">
@@ -87,27 +72,32 @@
       <thead>
         <tr>
           <th>Código</th>
-          <th>Fardo</th>
+          <!-- <th>Descrição</th> -->
           <th>Quant.</th>
-          <th>Quebra</th>
-          <th>Vizua.</th>
+          <th>Data Fab.</th>
+          <th>Sem Fab.</th>
+          <th>Lote</th>
         </tr>
       </thead>
       <tbody>
         @for (item of produtos; track $index) {
+        <tr [ngClass]="{
+    'wt-in': item.propsPST.origem === Origem.IN,
+    'wt-out': item.propsPST.origem === Origem.OUT
+  }">
 
-        <tr [ngClass]="{'wt-in': item.wt === WT.IN, 'wt-out': item.wt === WT.OUT}">
-          <td>{{ item.codigo }}</td>
-          <td>{{ item.fardo }}</td>
+          <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
+            {{ item.codigo }}
+          </td>
           <td>{{ item.quantidade }}</td>
-          <td>{{ item.quebra }}</td>
-          <td> <mat-icon [matTooltip]="item.descricao" [matTooltipDisabled]="tooltipDisabled" (click)="showTooltip()">
-              visibility
-            </mat-icon></td>
+          <td>{{ item.dataf }}</td>
+          <td>{{ item.semf }}</td>
+          <td>{{ item.lote }}</td>
         </tr>
         }
       </tbody>
     </table>
+
 
     <div class="legenda">
       <span class="legenda-item wt-out">Produtos a registrar</span>

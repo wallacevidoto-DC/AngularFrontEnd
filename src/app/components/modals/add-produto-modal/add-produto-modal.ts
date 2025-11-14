@@ -29,7 +29,7 @@ export interface SaidaFormDataOut {
 }
 
 
-interface ProdutoResponse {
+export interface ProdutoResponse {
   ProdutoId: number
   Codigo: string
   Descricao: string

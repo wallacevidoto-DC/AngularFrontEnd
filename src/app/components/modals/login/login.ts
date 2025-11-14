@@ -74,6 +74,7 @@ export class LoginModalComponent implements OnInit {
       if (!data) return;
 
       if (data.type === 'login_resposta') {
+        
         if (data.status === 'ok') {
           const userData = {
             dados: data.dados,
