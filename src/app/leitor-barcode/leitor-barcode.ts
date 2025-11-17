@@ -25,7 +25,7 @@ export class LeitorBarcode implements OnInit {
 
       if (!data) return;
 
-      if (data.type === 'get_produto_resposta') {
+      if (data.type === 'get_produto_cod_resposta') {
         if (data.dados) {
 
           const novoProduto = data.dados as ProdutoResponse;
@@ -46,9 +46,7 @@ export class LeitorBarcode implements OnInit {
 
   openModal() {
     this.scanning = true;
-    // this.viewReady = false;
     setTimeout(() => {
-      // Verifica se o elemento de vídeo foi realmente carregado
       if (this.video) {
         this.iniciarCamera();
       } else {

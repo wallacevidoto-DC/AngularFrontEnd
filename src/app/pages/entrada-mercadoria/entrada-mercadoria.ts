@@ -11,6 +11,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialog
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { EntradaLivre } from "../../components/entrada-livre/entrada-livre";
 
 
 export interface ProdutoResponse {
@@ -70,16 +71,16 @@ export class DialogOverviewExampleDialog {
 @Component({
   selector: 'app-entrada-mercadoria',
   standalone: true, // Adicionado standalone para Angular 15+ se for o caso
-  imports: [LeitorBarcode, MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatTabsModule, MatCard, MatIcon, RouterModule],
+  imports: [LeitorBarcode, MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatTabsModule, MatCard, MatIcon, RouterModule, EntradaLivre],
   templateUrl: './entrada-mercadoria.html',
   styleUrl: './entrada-mercadoria.scss'
 })
 export class EntradaMercadoria implements OnInit {
 
   readonly dialog = inject(MatDialog);
-  private cifId = signal(0);
+  protected cifId = signal(0);
   TYPE_IMPUT = TYPE_IMPUT; 
-  
+
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
 
@@ -97,6 +98,7 @@ export class EntradaMercadoria implements OnInit {
 
       else if (q?.startsWith('cif=')) {
         const codigoCif = q.split('=')[1];
+        this.cifId.set(codigoCif);
         this.tipoEntrada = TYPE_IMPUT.CIF
         this.menu = false;
       }

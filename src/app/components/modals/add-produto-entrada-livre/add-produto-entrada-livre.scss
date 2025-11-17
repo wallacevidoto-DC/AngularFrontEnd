@@ -1,0 +1,190 @@
+/* ===== pg - BACKDROP ROOT ===== */
+.pg-root {
+  width: 100%;
+}
+
+/* ===== pg - SECTION ===== */
+.pg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 14px;
+  background: #fafafa;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pg-legend {
+  font-weight: 600;
+  color: #333;
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 1rem;
+}
+
+/* ===== pg - FIELDS ===== */
+.pg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pg-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.pg-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.pg-input {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color .18s ease, box-shadow .18s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+    background: #fff;
+  }
+
+  &[readonly],
+  &:disabled {
+    background: #f1f3f4;
+    color: #6b6b6b;
+    cursor: not-allowed;
+  }
+}
+
+/* ===== pg - CODE + ACTIONS ===== */
+.pg-code {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.pg-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pg-btn-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: #1a73e8;
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+
+.pg-btn-act:hover {
+  background: #1558b0;
+  box-shadow: 0 2px 6px rgba(21, 88, 176, 0.18);
+}
+
+.pg-icon {
+  font-size: 18px;
+}
+
+/* garante que o componente barcode não quebre */
+.pg-barcode-wrap {
+  display: flex;
+  align-items: center;
+}
+
+/* ===== pg - DATAS / QUANTIDADES ===== */
+.pg-datals {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== pg - ERRO ===== */
+.pg-error {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* ===== pg - VALIDATION STYLE ===== */
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border: 1px solid #d93025;
+  background: #fff6f6;
+}
+
+/* ===== pg - BUTTONS ===== */
+.pg-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.pg-save,
+.pg-cancel {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.98rem;
+}
+
+.pg-save { background: #4caf50; color: #fff; }
+.pg-save:hover { background: #3e8e41; box-shadow: 0 4px 12px rgba(76,175,80,0.14); }
+
+.pg-cancel { background: #eee; color: #333; }
+.pg-cancel:hover { background: #e0e0e0; }
+
+/* small screens adjustments */
+@media (max-width: 480px) {
+  .pg-code {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pg-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .pg-btn-act {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pg-row { gap: 10px; }
+  .pg-buttons { flex-direction: column; align-items: stretch; }
+  .pg-save, .pg-cancel { width: 100%; }
+}

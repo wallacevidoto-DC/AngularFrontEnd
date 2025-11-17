@@ -1,0 +1,74 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onOpenBase()" (closeModal)="onCloseBase()" title="Busca de Produtos"
+    icon="inbox">
+
+    <div class="pg-root" style="z-index: 99999; width:100%;">
+        <section class="pg-section">
+
+            <legend class="pg-legend">Produto</legend>
+
+            <form #formRef="ngForm" (ngSubmit)="submit(formRef)">
+
+                <div class="pg-row">
+
+                    <!-- CÓDIGO -->
+                    <div class="pg-field pg-field-codigo">
+                        <label class="pg-label">Código:</label>
+
+                        <div class="pg-code">
+                            <input class="pg-input" type="text" [(ngModel)]="formData.codigo" name="codigo" required
+                                autocomplete="off" />
+
+                            <div class="pg-actions">
+                                <button type="button" class="pg-btn-act" (click)="buscarProduto()">
+                                    <mat-icon class="pg-icon">search</mat-icon>
+                                    Buscar
+                                </button>
+
+                                <div class="pg-barcode-wrap">
+                                    <app-leitor-barcode (produtoEncontrado)="codebar($event)"></app-leitor-barcode>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="formRef.submitted && !formData.codigo" class="pg-error">
+                            Informe o código do produto.
+                        </div>
+                    </div>
+
+                    <!-- DESCRIÇÃO -->
+                    <div class="pg-field pg-field-desc">
+                        <label class="pg-label">Descrição:</label>
+                        <input class="pg-input" type="text" [value]="produto?.Descricao || ''" name="descricao"
+                            readonly />
+                    </div>
+
+                </div>
+
+                <br />
+
+                <!-- QUANTIDADES -->
+                <section class="pg-section pg-inline">
+                    <legend class="pg-legend">Quantidades</legend>
+
+                    <div class="pg-datals">
+                        <div class="pg-field">
+                            <label class="pg-label">Qtd.:</label>
+                            <input class="pg-input" type="number" [(ngModel)]="formData.quantidade" name="quantidade"
+                                required />
+                            <div *ngIf="formRef.submitted && !formData.quantidade" class="pg-error">
+                                Quantidade é obrigatória.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="pg-buttons">
+                    <button type="submit" class="pg-save">Salvar</button>
+                    <button type="button" class="pg-cancel" (click)="onCloseBase()">Cancelar</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+</app-base-modal>
