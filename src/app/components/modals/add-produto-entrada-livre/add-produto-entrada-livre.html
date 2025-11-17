@@ -6,7 +6,7 @@
 
             <legend class="pg-legend">Produto</legend>
 
-            <form #formRef="ngForm" (ngSubmit)="submit(formRef)">
+            <form #formRef="ngForm">
 
                 <div class="pg-row">
 
@@ -63,7 +63,7 @@
                 </section>
 
                 <div class="pg-buttons">
-                    <button type="submit" class="pg-save">Salvar</button>
+                    <button  class="pg-save" (click)="submit()" >Salvar</button>
                     <button type="button" class="pg-cancel" (click)="onCloseBase()">Cancelar</button>
                 </div>
 

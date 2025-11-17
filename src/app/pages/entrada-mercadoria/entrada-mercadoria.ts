@@ -71,7 +71,7 @@ export class DialogOverviewExampleDialog {
 @Component({
   selector: 'app-entrada-mercadoria',
   standalone: true, // Adicionado standalone para Angular 15+ se for o caso
-  imports: [LeitorBarcode, MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatTabsModule, MatCard, MatIcon, RouterModule, EntradaLivre],
+  imports: [ MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatTabsModule, MatCard, MatIcon, RouterModule, EntradaLivre],
   templateUrl: './entrada-mercadoria.html',
   styleUrl: './entrada-mercadoria.scss'
 })

@@ -69,7 +69,7 @@ export class App implements OnInit {
         localStorage.removeItem('user');
       }
     }
-    // this.openLogin()
+    this.openLogin()
   }
 
   openLogin() {

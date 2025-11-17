@@ -18,6 +18,11 @@ export interface AddProduto {
   quantidade: number;
 }
 
+export interface RespostaProdutoLivre {
+  produto: ProdutoResponse;
+  qtd_conferida: number;
+  userId?: number;
+}
 
 @Component({
   selector: 'app-add-produto-entrada-livre',
@@ -26,6 +31,10 @@ export interface AddProduto {
   styleUrl: './add-produto-entrada-livre.scss',
 })
 export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
+
+
+  @Output() returnProdOk = new EventEmitter<RespostaProdutoLivre>();
+
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
@@ -51,12 +60,20 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
           this._snackBar.open(data.mensagem, "OK");
         }
 
+      } else if (data.type === 'conferencia_livre_resposta') {
+        if (data.dados) { 
+          
+        }
       }
+
+
+
+
       this.loadingService.hide();
     });
   }
 
-  @Output() submitForm = new EventEmitter<ProdutoSpDto>();
+
 
   openFlag = false;
 
@@ -84,7 +101,7 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
   }
   codebar($event: ProdutoResponse) {
     this.produto = $event;
-    this.formData.codigo =$event.Codigo
+    this.formData.codigo = $event.Codigo
   }
 
 
@@ -94,83 +111,90 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
 
   }
   submitted = false;
-  submit(form: NgForm) {
+  submit() {
+    // this.submitted = true;
+
+    // if (!this.produto || form.invalid || !this.wsService.UserCurrent) {
+    //   // mostra erros visuais e não envia nada
+    //   return;
+    // }
+
+    if (this.wsService.UserCurrent) {
+
+
+      const model: RespostaProdutoLivre = {
+        produto: this.produto,
+        qtd_conferida: this.formData.quantidade,
+        userId: this.wsService.UserCurrent.UserId,
+
+      } as RespostaProdutoLivre;
+
+      console.log(model);
+
+      this.wsService.send({
+        action: 'conferencia_livre',
+        data: model
+      });
+      this.loadingService.show();
+    }
+  }
+
+  submitx() {
     this.submitted = true;
 
-    if (!this.produto || form.invalid) {
-      // mostra erros visuais e não envia nada
+    // 1) validar formulário Angular
+    if (!this.formRef.valid) {
+      this._snackBar.open('Preencha todos os campos obrigatórios.', 'OK');
       return;
     }
 
-    // this.submitForm.emit({
-    //   codigo: this.produto.Codigo,
-    //   descricao: this.produto.Descricao,
-    //   produtoId: this.produto.ProdutoId,
-    //   quantidade: this.formData.quantidade,
-    //   dataf: this.converterMesAno(this.formData.dataf.toString()),
-    //   semf: this.formData.semf,
-    //   lote: this.formData.lote,
-    //   propsPST: { isModified: true, origem: Origem.OUT }
-    // } as ProdutoSpDto);
+    // 2) validar produto carregado
+    if (!this.produto) {
+      this._snackBar.open('Nenhum produto foi selecionado.', 'OK');
+      return;
+    }
 
-    this.loadingService.hide();
+    // 3) validar quantidade numérica
+    if (!this.formData.quantidade || this.formData.quantidade <= 0) {
+      this._snackBar.open('Informe uma quantidade válida.', 'OK');
+      return;
+    }
+
+    console.log("this.wsService", this.wsService);
+
+    // 4) validar usuário logado
+    if (!this.wsService.UserCurrent) {
+      this._snackBar.open('Usuário não identificado.', 'OK');
+      return;
+    }
+
+    // 5) montar model final
+    const model: RespostaProdutoLivre = {
+      produto: this.produto,
+      qtd_conferida: this.formData.quantidade,
+      userId: this.wsService.UserCurrent.UserId
+    };
+
+    console.log("✔ Modelo enviado:", model);
+
+    // 6) emite pro pai
+    this.returnProdOk.emit(model);
+
+    // 7) se quiser enviar via websocket:
+    /*
+    this.wsService.send({
+      action: 'conferencia_livre',
+      data: model
+    });
+    */
+
+    this.loadingService.show();
+
+    // FECHAR modal
     this.onClear();
     this.onCloseBase();
-    this.submitted = false;
   }
 
-  // submit() {
-  //   if (!this.produto) {
-  //     this._snackBar.open('Selecione um produto antes de continuar.', "OK");
-  //     return;
-  //   }
-
-  //   if (
-  //     !this.formData.quantidade ||
-  //     !this.formData.dataf ||
-  //     !this.formData.lote
-  //   ) {
-  //     this._snackBar.open('Preencha todos os campos obrigatórios.', "OK");
-  //     return;
-  //   }
-
-  //   // 🔹 Emite o formulário se estiver tudo OK
-  //   this.submitForm.emit({
-  //     codigo: this.produto.Codigo,
-  //     descricao: this.produto.Descricao,
-  //     produtoId: this.produto.ProdutoId,
-  //     quantidade: this.formData.quantidade,
-  //     dataf: this.converterMesAno(this.formData.dataf.toString()),
-  //     semf: this.formData.semf,
-  //     lote: this.formData.lote,
-  //     propsPST: { isModified: true, origem: Origem.OUT }
-  //   } as ProdutoSpDto);
-
-  //   this.loadingService.hide();
-  //   this.onClear();
-  //   this.onCloseBase();
-  // }
-
-
-  // submit() {
-  //   if (this.produto) {
-  //     this.submitForm.emit(
-  //       {
-  //         codigo: this.produto.Codigo,
-  //         descricao: this.produto.Descricao,
-  //         produtoId: this.produto.ProdutoId,
-  //         quantidade: this.formData.quantidade,
-  //         dataf: this.converterMesAno(this.formData.dataf.toString()),
-  //         semf: this.formData.semf,
-  //         lote: this.formData.lote,
-  //         propsPST: { isModified: true, origem: Origem.OUT }
-  //       } as ProdutoSpDto
-  //     );
-  //     this.loadingService.hide();
-  //     this.onClear();
-  //     this.onCloseBase()
-  //   }
-  // }
 
   onClear() {
     this.formData = {
