@@ -1,45 +1,36 @@
-<div class="entrada-mercadoria-container">
-  
-  <h2>📦 Entrada de Mercadoria</h2>
-  
-  <div class="scanner-section">
-    <app-leitor-barcode 
-      (produtoEncontrado)="adicionarProduto($any($event))">
-    </app-leitor-barcode>
-  </div>
+<!-- <app-leitor-barcode 
+  (produtoEncontrado)="adicionarProduto($any($event))"\> -->
+<div class="menu-container">
+@if (menu) {  
+    <mat-card class="menu-card"
+              matRipple
+              [routerLink]="['/entrada-mercadoria']"
+              [queryParams]="{ q: 'livre' }">
+        <mat-icon class="icon icon-estoque">storage</mat-icon>
+        <div class="card-text">
+            <h3>Entrada Livre</h3>
+            <p>Adicione produtos livremente, sem o apoio do módulo CIF.</p>
+        </div>
+    </mat-card>
 
-  <hr>
+    <mat-card
+        class="menu-card"
+        matRipple
+        (click)="abrirDialogCIF()">
+        <mat-icon class="icon icon-entrada">description</mat-icon>
+        <div class="card-text">
+            <h3>Conferência CIF</h3>
+            <p>Realize a entrada de mercadorias com o apoio do módulo CIF.</p>
+        </div>
+    </mat-card>} 
 
-  
-  <div class="lista-entrada-section">
-    <h3>🛒 Produtos a Entrar ({{ produtosEntrada.length }})</h3>
-    
-    <table *ngIf="produtosEntrada.length > 0; else listaVazia">
-      <thead>
-        <tr>
-          <th>Código</th>
-          <th>Descrição</th>
-          <th>Qtde</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of produtosEntrada">
-          <td>{{ item.Codigo }}</td>
-          <td>{{ item.Descricao }}</td>
-          <td>{{ item.quantidade }}</td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <ng-template #listaVazia>
-      <p class="alerta">Nenhum produto adicionado ainda.</p>
-    </ng-template>
+@switch (tipoEntrada) {
+  @case (TYPE_IMPUT.LIVRE) {
 
-    <button *ngIf="produtosEntrada.length > 0" 
-      class="finalizar-btn"
-      >
-      ✅ Finalizar Entrada (Enviar para o Estoque)
-    </button>
-  </div>
-
+    <div>entrada livre</div>
+  }
+  @case (TYPE_IMPUT.CIF) {
+    <div>entrada com cif</div>
+  }
+}
 </div>

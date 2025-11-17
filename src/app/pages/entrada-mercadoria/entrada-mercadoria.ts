@@ -1,91 +1,125 @@
-import { Component } from '@angular/core';
+import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Estoque } from "../../components/estoque/estoque"; // Assumindo que você usa este tipo/componente
 import { LeitorBarcode } from "../../leitor-barcode/leitor-barcode";
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
+import { MatCard } from "@angular/material/card";
+import { MatIcon } from "@angular/material/icon";
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 export interface ProdutoResponse {
-  ProdutoId: number; // ⬅️ O campo que estava faltando no LeitorBarcode
+  ProdutoId: number;
   Codigo: string;
   Descricao: string;
-  // Adicione todos os outros campos que seu produto possui
 }
 
-// Interface para o produto na lista de entrada
 export interface EntradaItem extends ProdutoResponse {
   quantidade: number;
 }
 
+export enum TYPE_IMPUT {
+  NONE, LIVRE, CIF
+}
+
+
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  template: `
+    <h2 mat-dialog-title>CIF</h2>
+    <mat-dialog-content>
+      <p>Insira o número da CIF</p>
+      <mat-form-field>
+        <mat-label>Ex: 654x</mat-label>
+        <input matInput [(ngModel)]="cif" />
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button matButton (click)="onNoClick()">Sair</button>
+      <button matButton [mat-dialog-close]="cif()" cdkFocusInitial>Ok</button>
+    </mat-dialog-actions>
+  `,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+  ],
+})
+export class DialogOverviewExampleDialog {
+  readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
+  readonly data = inject<string>(MAT_DIALOG_DATA);
+  readonly cif = model(this.data);
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+}
+
+
 @Component({
   selector: 'app-entrada-mercadoria',
   standalone: true, // Adicionado standalone para Angular 15+ se for o caso
-  imports: [LeitorBarcode, MatTabsModule,
-    FormsModule, // ⬅️ Adicione FormsModule
-    CommonModule // ⬅️ Adicione CommonModule
-  ], // MatTabsModule para o futuro, se necessário
+  imports: [LeitorBarcode, MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatTabsModule, MatCard, MatIcon, RouterModule],
   templateUrl: './entrada-mercadoria.html',
   styleUrl: './entrada-mercadoria.scss'
 })
-export class EntradaMercadoria {
-  // Lista dos produtos que estão sendo dados entrada
-  produtosEntrada: EntradaItem[] = [];
-  
-  // Variável para permitir a entrada manual do código, se desejado
-  codigoManual: string = '';
+export class EntradaMercadoria implements OnInit {
 
-  /**
-   * Adiciona o produto retornado pelo leitor de código de barras (ou digitação)
-   * à lista de entrada.
-   * @param produto O objeto ProdutoResponse retornado pelo servidor.
-   */
-  adicionarProduto(produto: ProdutoResponse) {
-    // Verifica se o produto já está na lista
-    const itemExistente = this.produtosEntrada.find(item => item.Codigo === produto.Codigo);
-
-    if (itemExistente) {
-      // Se existir, apenas incrementa a quantidade
-      itemExistente.quantidade++;
-      // alert(`Produto ${produto.Descricao} (Cód: ${produto.Codigo}) já estava na lista. Quantidade atualizada para ${itemExistente.quantidade}.`);
-    } else {
-      // Se não existir, adiciona como novo item (quantidade inicial = 1)
-      this.produtosEntrada.push({
-        ...produto,
-        quantidade: 1
-      });
-      // alert(`Produto ${produto.Descricao} (Cód: ${produto.Codigo}) adicionado à lista.`);
-    }
-  }
+  readonly dialog = inject(MatDialog);
+  private cifId = signal(0);
+  TYPE_IMPUT = TYPE_IMPUT; 
   
-  /**
-   * Envia o código digitado para buscar o produto, simulando o escaneamento.
-   */
-  buscarProdutoManual() {
-    if (this.codigoManual.trim()) {
-      // Aqui você enviaria o código digitado para o LeitorBarcode,
-      // mas como ele é o emissor, vamos refatorar a busca para um serviço ou injetar
-      // o WebSocketService diretamente aqui ou no LeitorBarcode e emitir um evento.
-      // Por simplicidade e seguindo o seu design, o LeitorBarcode cuidará da emissão.
-      
-      // Para o fluxo de digitação, vamos assumir que o LeitorBarcode terá um método público
-      // ou que você irá buscar o produto diretamente aqui usando o wsService.
-      // Vou buscar diretamente aqui para desacoplar a lógica de digitação do LeitorBarcode.
-      
-      // >>> NECESSÁRIO INJETAR WebSocketService SE USAR ESTE TRECHO <<<
-      // Exemplo de como você faria aqui:
-      /*
-      const codews = { codigo: this.codigoManual.trim() };
-      this.wsService.send({
-        action: 'get_produto_cod',
-        data: codews
-      });
-      this.codigoManual = ''; // Limpa o campo após o envio
-      */
-      
-      // Por enquanto, vamos focar na integração via output
-    }
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+
+  protected menu: boolean = true;
+  protected tipoEntrada: TYPE_IMPUT = TYPE_IMPUT.NONE
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const q = params['q'];
+      console.log("Q recebido:", q);
+      if (q === 'livre') {
+        this.tipoEntrada = TYPE_IMPUT.LIVRE
+        this.menu = false;
+      }
+
+      else if (q?.startsWith('cif=')) {
+        const codigoCif = q.split('=')[1];
+        this.tipoEntrada = TYPE_IMPUT.CIF
+        this.menu = false;
+      }
+      else {
+
+        this.menu = true;
+        this.tipoEntrada = TYPE_IMPUT.NONE
+
+      }
+    });
   }
 
-  // Você pode adicionar mais métodos aqui, como finalizarEntrada(), removerItem(), etc.
+
+  abrirDialogCIF() {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        this.cifId.set(result);
+        this.router.navigate(['/entrada-mercadoria'], {
+          queryParams: { q: `cif=${result}` }
+        });
+      }
+    });
+  }
 }

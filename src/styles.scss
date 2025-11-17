@@ -1,7 +1,12 @@
 @use '@angular/material' as mat;
 
 
-
+$color-primary: #1976D2; // Azul
+$color-accent: #FF4081;  // Rosa
+$color-warn: #F44336;    // Vermelho
+$color-background: #FAFAFA; // Fundo leve
+$color-surface: #FFFFFF;    // Superfície de cards e modais
+$color-text-primary: rgba(0, 0, 0, 0.87); // Texto principal
 
 
 html {

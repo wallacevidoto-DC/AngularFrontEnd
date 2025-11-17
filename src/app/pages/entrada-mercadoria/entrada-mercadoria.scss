@@ -1,92 +1,78 @@
-.entrada-mercadoria-container {
-  padding: 20px;
+.menu-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 40px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    min-height: 100vh;
 }
 
-h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.scanner-section {
-  margin-bottom: 30px;
-}
-
-.manual-input-section {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 20px;
-  
-  input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    flex-grow: 1;
-  }
-  
-  button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
+.menu-card {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    height: 150px;
+    padding: 16px;
     cursor: pointer;
-    
-    &:disabled {
-      background-color: #a0a0a0;
-      cursor: not-allowed;
-    }
-  }
+    border-radius: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    gap: 10px;
 }
 
-.lista-entrada-section {
-  margin-top: 30px;
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    
-    th {
-      background-color: #f2f2f2;
-    }
-  }
-  
-  .alerta {
+.menu-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+    font-size: 48px;
+    margin-right: 16px;
+}
+
+.icon-estoque {
+    color: #2204ca;
+    /* verde */
+}
+
+.icon-entrada {
+    color: #009e0e;
+    /* laranja */
+}
+
+.card-text h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.card-text p {
+    margin: 4px 0 0;
+    font-size: 14px;
     color: #666;
-    margin-top: 10px;
-  }
-  
-  .finalizar-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-top: 20px;
-    background-color: #28a745;
-    color: white;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    
-    &:hover {
-      background-color: #218838;
-    }
-  }
 }
 
-.camera-btn {
-  padding: 10px 20px;
-  background-color: #ffc107;
-  color: #333;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
+.mat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 700px) {
+    .menu-card {
+        // width: 90%;
+        justify-content: flex-start;
+    }
+
+    .menu-container {
+        align-content: flex-start;
+    }
 }
