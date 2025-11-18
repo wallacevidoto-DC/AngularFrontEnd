@@ -1,0 +1,17 @@
+<mat-card class="google-table-card">
+  <div class="google-table">
+    <!-- Cabeçalho -->
+    <div class="row header">
+      <div class="cell codigo">Código</div>
+      <div class="cell descricao">Descrição</div>
+      <div class="cell quantidade">Qtd</div>
+    </div>
+
+    <!-- Linhas -->
+    <div class="row" *ngFor="let item of items; let i = index" [class.odd]="i % 2 === 1">
+      <div class="cell codigo">{{ item.codigo }}</div>
+      <div class="cell descricao">{{ item.descricao }}</div>
+      <div class="cell quantidade">{{ item.quantidade }}</div>
+    </div>
+  </div>
+</mat-card>

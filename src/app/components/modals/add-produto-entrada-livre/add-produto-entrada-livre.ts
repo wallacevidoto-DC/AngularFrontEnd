@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Inject, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Inject, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from "@angular/material/dialog";
 import { MatLabel, MatFormField, MatError, MatHint } from "@angular/material/form-field";
@@ -11,17 +11,25 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProdutoSpDto } from '../entrada-modal/index.interface';
 import { ProdutoResponse } from '../add-produto-modal/add-produto-modal';
 import { LeitorBarcode } from "../../../leitor-barcode/leitor-barcode";
+import { ToastrService } from 'ngx-toastr';
 
 
 export interface AddProduto {
   codigo: string;
   quantidade: number;
+  dataf: string;
+  semf: number;
+  lote: string;
 }
 
 export interface RespostaProdutoLivre {
   produto: ProdutoResponse;
   qtd_conferida: number;
   userId?: number;
+  dataf: string;
+  semf: number;
+  lote: string;
+
 }
 
 @Component({
@@ -38,8 +46,13 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
+  private toastr: ToastrService = inject(ToastrService);
   private _snackBar = inject(MatSnackBar);
+
+
+  private model: RespostaProdutoLivre | null = null;
   produto?: ProdutoResponse;
+
   @ViewChild('formRef') formRef!: NgForm;
   ngOnInit(): void {
 
@@ -61,14 +74,17 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
         }
 
       } else if (data.type === 'conferencia_livre_resposta') {
-        if (data.dados) { 
-          
+        if (data.status === 'ok') {
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          //@ts-ignore
+          this.returnProdOk.emit(this.model);
+          this.onCloseBase()
+
+        }
+        else {
+          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
-
-
-
-
       this.loadingService.hide();
     });
   }
@@ -79,6 +95,9 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
 
   formData = {
     quantidade: NaN,
+    dataf: '',
+    lote: '',
+    semf: NaN
   } as AddProduto;
 
 
@@ -112,87 +131,39 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
   }
   submitted = false;
   submit() {
-    // this.submitted = true;
 
-    // if (!this.produto || form.invalid || !this.wsService.UserCurrent) {
-    //   // mostra erros visuais e não envia nada
-    //   return;
-    // }
+    if (!this.produto ) {
+      this._snackBar.open('Nenhum produto encontrado!', 'OK');
+      return;
+    }
+    if (!this.formData.quantidade || this.formData.quantidade <= 0) {
+      this._snackBar.open('Informe uma quantidade válida!', 'OK');
+      return;
+    }
+    if (!this.wsService.UserCurrent) {
+      this._snackBar.open('Usuário não autenticado!', 'OK');
+      return;
+    }
 
     if (this.wsService.UserCurrent) {
 
 
-      const model: RespostaProdutoLivre = {
+      this.model = {
         produto: this.produto,
         qtd_conferida: this.formData.quantidade,
         userId: this.wsService.UserCurrent.UserId,
+        dataf: this.formData.dataf,
+        semf: this.formData.semf,
+        lote: this.formData.lote
+
 
       } as RespostaProdutoLivre;
-
-      console.log(model);
-
       this.wsService.send({
         action: 'conferencia_livre',
-        data: model
+        data: this.model
       });
       this.loadingService.show();
     }
-  }
-
-  submitx() {
-    this.submitted = true;
-
-    // 1) validar formulário Angular
-    if (!this.formRef.valid) {
-      this._snackBar.open('Preencha todos os campos obrigatórios.', 'OK');
-      return;
-    }
-
-    // 2) validar produto carregado
-    if (!this.produto) {
-      this._snackBar.open('Nenhum produto foi selecionado.', 'OK');
-      return;
-    }
-
-    // 3) validar quantidade numérica
-    if (!this.formData.quantidade || this.formData.quantidade <= 0) {
-      this._snackBar.open('Informe uma quantidade válida.', 'OK');
-      return;
-    }
-
-    console.log("this.wsService", this.wsService);
-
-    // 4) validar usuário logado
-    if (!this.wsService.UserCurrent) {
-      this._snackBar.open('Usuário não identificado.', 'OK');
-      return;
-    }
-
-    // 5) montar model final
-    const model: RespostaProdutoLivre = {
-      produto: this.produto,
-      qtd_conferida: this.formData.quantidade,
-      userId: this.wsService.UserCurrent.UserId
-    };
-
-    console.log("✔ Modelo enviado:", model);
-
-    // 6) emite pro pai
-    this.returnProdOk.emit(model);
-
-    // 7) se quiser enviar via websocket:
-    /*
-    this.wsService.send({
-      action: 'conferencia_livre',
-      data: model
-    });
-    */
-
-    this.loadingService.show();
-
-    // FECHAR modal
-    this.onClear();
-    this.onCloseBase();
   }
 
 
@@ -200,8 +171,11 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
     this.formData = {
       codigo: '',
       quantidade: NaN,
+      dataf: '',
+      lote: '',
+      semf: NaN
     };
-
+    this.model = null;
     this.produto = undefined;
   }
 

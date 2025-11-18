@@ -45,9 +45,84 @@
                 </div>
 
                 <br />
+ @if (produto) {
+        <section class="section-group inline-group">
+          <div class="group datals">
+            <div class="campo">
+              <label>Qtd.:</label>
+              <input type="number" [(ngModel)]="formData.quantidade" name="quantidade" placeholder="Ex.: 0" required />
+              <div *ngIf="formRef.submitted && !formData.quantidade" class="erro-msg">
+                Quantidade é obrigatória.
+              </div>
+            </div>
 
-                <!-- QUANTIDADES -->
-                <section class="pg-section pg-inline">
+            <div class="campo">
+              <label>Data Fab. (MM/YY)</label>
+              <input type="month" [(ngModel)]="formData.dataf" name="dataf" required />
+              <div *ngIf="formRef.submitted && !formData.dataf" class="erro-msg">
+                Data de fabricação é obrigatória.
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Sem Fab.:</label>
+              <input type="number" [(ngModel)]="formData.semf" name="semf" placeholder="Ex.: 0" required />
+              <div *ngIf="formRef.submitted && !formData.semf" class="erro-msg">
+                Campo obrigatório.
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Lote:</label>
+              <input type="text" [(ngModel)]="formData.lote" name="lote" placeholder="Ex.: GR2" required />
+              <div *ngIf="formRef.submitted && !formData.lote" class="erro-msg">
+                Lote é obrigatório.
+              </div>
+            </div>
+          </div>
+        </section>
+        }
+                <!-- @if (produto) {
+                <section class="g-section pg-inline">
+                    <div class="pg-datals">
+                        <div class="pg-field">
+                            <label class="pg-label">Qtd.:</label>
+                            <input type="number" class="pg-input" [(ngModel)]="formData.quantidade" name="quantidade"
+                                placeholder="Ex.: 0" required />
+                            <div *ngIf="formRef.submitted && !formData.quantidade" class="erro-msg">
+                                Quantidade é obrigatória.
+                            </div>
+                        </div>
+
+                        <div class="pg-field">
+                            <label class="pg-label">Data Fab. (MM/YY)</label>
+                            <input type="month" class="pg-input" [(ngModel)]="formData.dataf" name="dataf" required />
+                            <div *ngIf="formRef.submitted && !formData.dataf" class="erro-msg">
+                                Data de fabricação é obrigatória.
+                            </div>
+                        </div>
+
+                        <div class="pg-field">
+                            <label class="pg-label">Sem Fab.:</label>
+                            <input type="number" class="pg-input" [(ngModel)]="formData.semf" name="semf"
+                                placeholder="Ex.: 0" required />
+                            <div *ngIf="formRef.submitted && !formData.semf" class="erro-msg">
+                                Campo obrigatório.
+                            </div>
+                        </div>
+
+                        <div class="pg-field">
+                            <label class="pg-label">Lote:</label>
+                            <input type="text" class="pg-input" [(ngModel)]="formData.lote" name="lote"
+                                placeholder="Ex.: GR2" required />
+                            <div *ngIf="formRef.submitted && !formData.lote" class="erro-msg">
+                                Lote é obrigatório.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                } -->
+                <!-- <section class="pg-section pg-inline">
                     <legend class="pg-legend">Quantidades</legend>
 
                     <div class="pg-datals">
@@ -60,10 +135,10 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> -->
 
                 <div class="pg-buttons">
-                    <button  class="pg-save" (click)="submit()" >Salvar</button>
+                    <button class="pg-save" (click)="submit()">Salvar</button>
                     <button type="button" class="pg-cancel" (click)="onCloseBase()">Cancelar</button>
                 </div>
 

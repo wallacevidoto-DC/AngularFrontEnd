@@ -20,15 +20,6 @@ export interface AddProduto {
   lote: string;
 }
 
-export interface SaidaFormDataOut {
-  estoqueId: number
-  fardo: number;
-  quantidade: number;
-  quebra: number;
-  observacao: string;
-}
-
-
 export interface ProdutoResponse {
   ProdutoId: number
   Codigo: string
@@ -114,7 +105,7 @@ export class AddProdutoModal extends ModalBase implements OnInit {
     this.submitted = true;
 
     if (!this.produto || form.invalid) {
-      // mostra erros visuais e não envia nada
+      alert("Falta Preencher algo.")
       return;
     }
 

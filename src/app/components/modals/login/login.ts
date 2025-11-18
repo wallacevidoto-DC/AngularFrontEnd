@@ -71,6 +71,7 @@ export class LoginModalComponent implements OnInit {
 
     this.wsService.messages$.subscribe(data => {
 
+      // alert(data)
       if (!data) return;
 
       if (data.type === 'login_resposta') {
@@ -81,7 +82,6 @@ export class LoginModalComponent implements OnInit {
             loginDate: new Date().toISOString() 
           };
           localStorage.setItem('user', JSON.stringify(userData));
-
           this.wsService.UserCurrent = data.dados;
           this.loadingService.hide();
           this.dialogRef.close(true);

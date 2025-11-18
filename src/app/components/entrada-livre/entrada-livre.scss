@@ -1,0 +1,109 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    max-width: 980px;
+    // margin: auto;
+    width: 100vh;
+    // width: 100%;
+}
+
+.header-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    color: #E6E1E5;
+}
+
+.google-btn {
+    /* Dimensões base Google */
+    height: 40px;
+    padding: 0 24px;
+
+    /* Cores Material padrão */
+    background: #1A73E8;
+    /* Primary */
+    color: rgb(255, 255, 255);
+    /* on-primary */
+
+    /* Tipografia Google */
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+
+    /* Borda */
+    border: none;
+    border-radius: 20px;
+    /* Pill shape Material 3 */
+
+    /* Shadow MD3 (Elevation 2) */
+    box-shadow:
+        0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+        0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+    /* Animações */
+    transition: background .2s, box-shadow .2s, transform .1s;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Hover */
+.google-btn:hover {
+    background: #1a73e8c2;
+
+    box-shadow:
+        0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+        0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+}
+
+/* Pressionado */
+.google-btn:active {
+    transform: scale(0.98);
+}
+
+/* Foco acessível */
+.google-btn:focus-visible {
+    outline: 2px solid #B69DF8;
+    outline-offset: 2px;
+}
+
+/* Ícone dentro do botão */
+.google-btn .icon {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 2px;
+}
+
+.google-btn.danger {
+    background: #d93025;
+}
+
+.google-btn.success {
+    background: #34A853;
+    /* Verde Google */
+    color: white;
+}
+
+.google-btn.success:hover {
+    background: #2c8a46;
+}
+
+@media (max-width: 500px) {
+    .page-container {
+        width: auto;
+    }
+}

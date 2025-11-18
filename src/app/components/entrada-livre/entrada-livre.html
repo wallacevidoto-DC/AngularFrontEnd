@@ -1,8 +1,27 @@
-<button mat-raised-button color="accent" (click)="addProduto.openx()">
-    Abrir Modal de Produto
-</button>
+<div class="page-container">
 
+    <div class="header-section">
+        <button class="google-btn" color="accent" (click)="addProduto.openx()">
+            <mat-icon>add</mat-icon>
+            Adicionar Produto
+        </button>
+    </div>
+    <mat-card class="card-lista">
+        <mat-card-header>
+            <mat-card-title>Produtos Selecionados</mat-card-title>
+            <mat-card-subtitle>Itens da entrada livre</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-lista-produtos-livre [items]="meusProdutos"></app-lista-produtos-livre>
+        </mat-card-content>
+    </mat-card>
+    @if (meusProdutos.length > 0) {
+    <button class="google-btn success" (click)="finalizar()">
+        <mat-icon>check</mat-icon>
+        Finalizar Entrada
+    </button>
+    }
+    <app-add-produto-entrada-livre #addProduto (returnProdOk)="onProdutoRetornado($event)">
+    </app-add-produto-entrada-livre>
 
-
-
-<app-add-produto-entrada-livre #addProduto  />
+</div>

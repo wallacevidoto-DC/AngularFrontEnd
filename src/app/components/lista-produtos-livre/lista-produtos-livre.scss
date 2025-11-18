@@ -1,0 +1,53 @@
+.google-table-card {
+  padding: 16px;
+  border-radius: 14px;
+  background-color: #ffffff; /* branco */
+  color: #000000; /* preto */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+.google-table {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Cabeçalho */
+.row.header {
+  background-color: #f5f5f5; /* cinza claro */
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.row {
+  display: contents; /* mantém grid nas células */
+}
+
+.cell {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0; /* linha clara */
+}
+
+/* Linhas ímpares */
+.row.odd .cell {
+  background-color: #fafafa; /* cinza bem claro */
+}
+
+/* Hover */
+.row:not(.header):hover .cell {
+  background-color: #e0f7fa; /* azul claro de hover */
+}
+
+/* Ajustes de colunas */
+.cell.codigo {
+  font-weight: 500;
+}
+
+.cell.quantidade {
+  text-align: right;
+  font-weight: 600;
+}

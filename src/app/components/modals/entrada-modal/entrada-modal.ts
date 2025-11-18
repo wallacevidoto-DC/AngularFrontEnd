@@ -79,7 +79,7 @@ export class EntradaModal extends ModalBase implements OnInit {
         this.loadingService.hide();
       }
       else if (data.type === 'entrada_resposta') {
-        this.loadingService.hide();
+
         if (data.status === 'ok') {
           this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
           this.wsService.send({ action: 'get_estoque' });
@@ -89,7 +89,7 @@ export class EntradaModal extends ModalBase implements OnInit {
           this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
-
+      this.loadingService.hide();
     });
 
   }
@@ -134,9 +134,9 @@ export class EntradaModal extends ModalBase implements OnInit {
   submit() {
 
     if (!this.rua || !this.bloco || !this.apt) {
-    this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
-    return; 
-  }
+      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
+      return;
+    }
 
     if (this.wsService.UserCurrent) {
       const produtoInsert = this.produtos.filter(p => p.propsPST.origem === Origem.OUT);
