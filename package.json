@@ -31,6 +31,7 @@
     "@angular/material": "^20.2.2",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
+    "@angular/service-worker": "^20.2.0",
     "@coreui/angular": "^5.5.22",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
