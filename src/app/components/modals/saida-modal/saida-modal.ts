@@ -50,7 +50,6 @@ export class SaidaModal extends ModalBase implements OnInit {
     this.isOpen = true;
     this.onClear();
     if (data) {
-      console.log('data', data);
       this.formData = data
     }
   }

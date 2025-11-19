@@ -1,5 +1,41 @@
 <div class="page-container">
 
+  <div class="header-section">
+    <button class="google-btn primary" (click)="addProduto.openx()">
+      <mat-icon>add</mat-icon>
+      Adicionar Produto
+    </button>
+  </div>
+
+  <mat-card class="card-lista">
+    <mat-card-header>
+      <mat-card-title>Produtos Selecionados</mat-card-title>
+      <mat-card-subtitle>Itens da entrada livre</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <app-lista-produtos-livre [items]="meusProdutos"/>
+    </mat-card-content>
+  </mat-card>
+
+  @if (meusProdutos.length > 0) {
+    <div class="footer-section">
+      <button class="google-btn success" (click)="finalizar()">
+        <mat-icon>check</mat-icon>
+        Finalizar Entrada
+      </button>
+    </div>
+  }
+
+  <app-add-produto-entrada-livre
+    #addProduto
+    (returnProdOk)="onProdutoRetornado($event)">
+  </app-add-produto-entrada-livre>
+
+</div>
+
+<!-- <div class="page-container">
+
     <div class="header-section">
         <button class="google-btn" color="accent" (click)="addProduto.openx()">
             <mat-icon>add</mat-icon>
@@ -24,4 +60,4 @@
     <app-add-produto-entrada-livre #addProduto (returnProdOk)="onProdutoRetornado($event)">
     </app-add-produto-entrada-livre>
 
-</div>
+</div> -->

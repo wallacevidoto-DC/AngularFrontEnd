@@ -6,63 +6,43 @@
       <div class="group">
         <div class="campo">
           <label>Código:</label>
-          <input type="text" [(ngModel)]="formData.codigo" name="codigo" readonly>
+          <input type="text" [(ngModel)]="formData.produto!.codigo" name="codigo" readonly>
         </div>
 
         <div class="campo">
           <label>Descrição:</label>
-          <input type="text" [(ngModel)]="formData.descricao" name="descricao" readonly>
-        </div>
-
-        <div class="group">
-
-          <div class="campo">
-            <label>Produto:</label>
-            <input type="text" [(ngModel)]="formData.produto" name="produto" readonly>
-          </div>
-
-          <div class="campo">
-            <label>Modelo:</label>
-            <input type="text" [(ngModel)]="formData.modelo" name="modelo" readonly>
-          </div>
+          <input type="text" [(ngModel)]="formData.produto!.descricao" name="descricao" readonly>
         </div>
       </div>
-
-
-      <section class="section-group inline-group">
-        <legend>Quantidade atual</legend>
-        <div>
-          <div class="campo">
-            <input type="text" [ngModel]="totalS" readonly style="text-align: center;">
-          </div>
-
-        </div>
-
-      </section>
     </section>
     <form (ngSubmit)="submit()">
       <section class="section-group inline-group">
-        <legend>Quantidade corrigida</legend>
-        <div class="group">
+        <div class="group datals">
           <div class="campo">
-            <label>Fardo:</label>
-            <input type="number" [(ngModel)]="formDataOut.fardo" name="fardo" (input)="calcularTotalNew()">
+            <label>Qtd.:</label>
+            <input type="number" [(ngModel)]="formData.quantidade" name="quantidade" placeholder="Ex.: 0" required />
+            Quantidade é obrigatória.
+          </div>
+
+
+          <div class="campo">
+            <label>Data Fab. (MM/YY)</label>
+            <input type="month" [(ngModel)]="formData.dataF" name="dataf" required />
+
           </div>
 
           <div class="campo">
-            <label>Qtd. por fardo:</label>
-            <input type="number" [(ngModel)]="formDataOut.quantidade" name="quantidade" (input)="calcularTotalNew()">
+            <label>Sem Fab.:</label>
+            <input type="number" [(ngModel)]="formData.semF" name="semf" placeholder="Ex.: 0" required />
+
           </div>
 
           <div class="campo">
-            <label>Quebra:</label>
-            <input type="number" [(ngModel)]="formDataOut.quebra" name="quebra" (input)="calcularTotalNew()">
+            <label>Lote:</label>
+            <input type="text" [(ngModel)]="formData.lote" name="lote" placeholder="Ex.: GR2" required />
+
           </div>
 
-          <div class="campo">
-            <label>Total:</label>
-            <input type="number" [value]="totalNew" readonly>
-          </div>
         </div>
 
 
@@ -71,7 +51,7 @@
 
       <div class="campo">
         <label>Observações:</label>
-        <textarea [(ngModel)]="formDataOut.observacao" name="observacao"></textarea>
+        <textarea [(ngModel)]="formData.obs" name="observacao"></textarea>
       </div>
 
       <div class="botoes">

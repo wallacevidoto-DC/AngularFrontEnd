@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { BaseModalComponent, ModalBase } from '../base-modal/base-modal.component';
 import { WebSocketService } from '../../../service/ws.service';
-import { CorrecaoType } from '../../../types/correcao.type';
 import { LoadingService } from '../loading-page/LoadingService.service';
 import { EstoqueItem } from '../../estoque/index.interface';
+import { CorrecaoDto } from './index.interface';
+import { Origem } from '../entrada-modal/index.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-correcao-modal',
@@ -19,28 +21,21 @@ export class CorrecaoModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  totalS: string = '';
-  totalNew: number = 0
-  formData = {
+  private toastr: ToastrService = inject(ToastrService);
+  protected formData: EstoqueItem = {
     estoqueId: 0,
-    codigo: '',
-    descricao: '',
-    produto: '',
-    modelo: '',
-    fardo: 0,
+    produtoId: 0,
+    semF: 0,
     quantidade: 0,
-    quebra: 0,
-    total: 0,
-    observacao: ''
-  } as any;
-
-  formDataOut = {
-    estoqueId: 0,
-    fardo: 0,
-    quantidade: 0,
-    quebra: 0,
-    observacao: '',
-  } as any;
+    dataF: '',
+    dataL: '',
+    createAt: '',
+    updateAt: '',
+    produto: {
+      codigo: '',
+      descricao: ''
+    }
+  };
 
 
   ngOnInit(): void {
@@ -51,15 +46,15 @@ export class CorrecaoModal extends ModalBase implements OnInit {
 
       if (data.type === 'correcao_resposta') {
         if (data.status === 'ok') {
-          this.submitForm.emit()
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
-          // this.loadingService.hide();
         }
         else {
-          this.loadingService.hide();
-          alert(data.mensagem)
+          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
+      this.loadingService.hide();
     });
 
   }
@@ -69,67 +64,74 @@ export class CorrecaoModal extends ModalBase implements OnInit {
     this.isOpen = true;
     this.onClear();
     if (data) {
-      // this.formData = { ...this.formData, ...data };
-      this.formDataOut.estoqueId = this.formData.estoqueId
-      this.calcularTotal();
-      this.calcularTotalNew();
+      this.formData = {
+        ...data,
+        dataF: this.convertMMYYtoYYYYMM(data.dataF),
+      };
+
+      console.log('data', data);
+
     }
   }
 
-  calcularTotal() {
-    const { fardo, quantidade, quebra } = this.formData;
+  private convertMMYYtoYYYYMM(value: string | null | undefined): string {
+    if (!value) return '';
 
-    // Calcula o total real
-    const t = fardo * quantidade + quebra;
-    this.formData.total = t < 0 ? 0 : t;
+    if (/^\d{2}\/\d{2}$/.test(value)) {
+      const [mm, yy] = value.split('/');
+      return `20${yy}-${mm}`;
+    }
 
-    // Atualiza a string para exibir no input
-    this.totalS = `${fardo}x${quantidade}+${quebra} = ${t}`;
+    return value; // caso já venha no formato certo
   }
-  calcularTotalNew() {
-    const t = this.formDataOut.fardo * this.formDataOut.quantidade + this.formDataOut.quebra;
-    this.totalNew = t < 0 ? 0 : t;
+  converterMesAno(valor: string): string {
+    if (!valor) return '';
+    const [ano, mes] = valor.split('-');
+    return `${mes}/${ano.slice(2)}`;
   }
-
   submit() {
-    if (this.wsService.UserCurrent) {
-      this.calcularTotal();
+    if (this.wsService.UserCurrent && this.formData) {
 
-      const product: any = { ...this.formDataOut, };
-      const datas: CorrecaoType = {
-        action: 'correcao',
-        observacao: this.formDataOut.observacao,
-        user: this.wsService.UserCurrent.UserId,
-        product
+      const correcaoDto: CorrecaoDto = {
+        tipo: "CORRECAO",
+        userId: this.wsService.UserCurrent.UserId,
+        estoqueId: this.formData.estoqueId,
+        observacao: this.formData.obs ?? '',
+        produto: {
+          produtoId: this.formData.produtoId,
+          codigo: this.formData.produto?.codigo ?? "",
+          descricao: this.formData.produto?.descricao ?? "",
+          quantidade: this.formData.quantidade,
+          dataf: this.converterMesAno(this.formData.dataF.toString()),
+          semf: this.formData.semF,
+          lote: this.formData.lote ?? "",
+          propsPST: {
+            origem: Origem.IN,
+            isModified: true
+          }
+        }
       };
-      this.wsService.send(datas);
+      this.wsService.send({
+        action: 'correcao',
+        data: correcaoDto
+      });
       this.loadingService.show();
     }
   }
   onClear() {
     this.formData = {
       estoqueId: 0,
-      codigo: '',
-      descricao: '',
-      produto: '',
-      modelo: '',
-      fardo: 0,
+      produtoId: 0,
+      semF: 0,
       quantidade: 0,
-      quebra: 0,
-      total: 0,
-      observacao: ''
-    };
-
-    this.formDataOut = {
-      estoqueId: 0,
-      fardo: 0,
-      quantidade: 0,
-      quebra: 0,
-      observacao: ''
-    };
-
-    this.totalS = '';
-    this.totalNew = 0;
+      dataF: '',
+      dataL: '',
+      createAt: '',
+      updateAt: '',
+      produto: {
+        codigo: '',
+        descricao: ''
+      }
+    }
   }
-
 }

@@ -152,7 +152,7 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
         produto: this.produto,
         qtd_conferida: this.formData.quantidade,
         userId: this.wsService.UserCurrent.UserId,
-        dataf: this.formData.dataf,
+        dataf:this.converterMesAno(this.formData.dataf.toString()),
         semf: this.formData.semf,
         lote: this.formData.lote
 

@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, MatCardModule, DragDropModule, MatIconModule, RouterModule],
+  imports: [CommonModule, MatCardModule, DragDropModule, MatIconModule, RouterModule,],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
