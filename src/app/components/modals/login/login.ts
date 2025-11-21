@@ -12,9 +12,7 @@ import { LoadingService } from '../loading-page/LoadingService.service';
 export interface User {
   UserId: number
   Name: string
-  Password: any
   Role: number
-  CreateAt: string
 }
 
 @Component({
