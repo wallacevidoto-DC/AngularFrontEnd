@@ -1,0 +1,56 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onCloseBase()" (closeModal)="onCloseBase()" title="Correção" icon="edit">
+  <div>
+    <section class="section-group">
+      <legend>Produto</legend>
+
+      <div class="group">
+        <div class="campo">
+          <label>Código:</label>
+          <input type="text" [(ngModel)]="formData.ProdutoCodigo" name="codigo" readonly>
+        </div>
+
+        <div class="campo">
+          <label>Descrição:</label>
+          <input type="text" [(ngModel)]="formData.ProdutoDescricao" name="descricao" readonly>
+        </div>
+      </div>
+    </section>
+    <form (ngSubmit)="submit()">
+      <section class="section-group inline-group">
+        <div class="group datals">
+          <div class="campo">
+            <label>Qtd.:</label>
+            <input type="number" [(ngModel)]="formData.QtdConferida" name="quantidade" placeholder="Ex.: 0" required />
+            Quantidade é obrigatória.
+          </div>
+
+
+          <div class="campo">
+            <label>Data Fab. (MM/YY)</label>
+            <input type="month" [(ngModel)]="formData.DataF" name="dataf" required />
+
+          </div>
+
+          <div class="campo">
+            <label>Sem Fab.:</label>
+            <input type="number" [(ngModel)]="formData.SemF" name="semf" placeholder="Ex.: 0" required />
+
+          </div>
+
+          <div class="campo">
+            <label>Lote:</label>
+            <input type="text" [(ngModel)]="formData.Lote" name="lote" placeholder="Ex.: GR2" required />
+
+          </div>
+
+        </div>
+
+
+      </section>
+      <div class="botoes">
+        <button type="submit">Salvar</button>
+        <button type="button" (click)="onCloseBase()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</app-base-modal>

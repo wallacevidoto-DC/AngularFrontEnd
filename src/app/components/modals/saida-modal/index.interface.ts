@@ -3,7 +3,7 @@ import { ProdutoSpDto } from "../entrada-modal/index.interface";
 export interface SaidaDto {
     tipo?: "SAIDA";
     observacao?: string;
-    userId: number;
+    userId?: number;
     estoqueId:number
-    qtdRetirada:Number
+    qtdRetirada?:Number
 }

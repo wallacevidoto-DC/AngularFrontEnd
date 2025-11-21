@@ -59,7 +59,7 @@ export class SaidaModal extends ModalBase implements OnInit {
     if (this.wsService.UserCurrent) {
       if (this.formData) {
         const saidaDto: SaidaDto = {
-          userId: this.wsService.UserCurrent.UserId,
+          // userId: this.wsService.UserCurrent.UserId,
           qtdRetirada: this.formDataQtd,
           observacao: this.formDataObs ?? undefined,
           estoqueId: this.formData?.estoqueId

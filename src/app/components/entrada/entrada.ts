@@ -1,10 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, NgZone, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { EntradaModal } from '../modals/entrada-modal/entrada-modal';
-import { SaidaModal } from '../modals/saida-modal/saida-modal';
-import { TransferenciaModal } from '../modals/transferencia-modal/transferencia-modal';
-import { CorrecaoModal } from '../modals/correcao-modal/correcao-modal';
+import { FormsModule } from '@angular/forms';;
 import { WebSocketService } from '../../service/ws.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon'
@@ -13,16 +9,14 @@ import { LoadingPage } from "../modals/loading-page/loading-page";
 import { LoadingService } from '../modals/loading-page/LoadingService.service';
 import { MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard } from "@angular/material/card";
 import { EntradasViewerDto } from './index.interface';
+import { RouterModule } from '@angular/router';
+import { EntradaConferenciaCorrecaoModal } from '../modals/entrada-conferencia_correcao-modal/entrada-conferencia_correcao-modal';
 import { EntradaConferenciaModal } from "../modals/entrada-conferencia-modal/entrada-modal";
 
 @Component({
   selector: 'app-entrada',
-  imports: [EntradaModal, CommonModule,
-    FormsModule,
-    SaidaModal,
-    TransferenciaModal,
-    CorrecaoModal, MatButtonModule,
-    MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaModal],
+  standalone:true,
+  imports: [CommonModule,  FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal],
   templateUrl: './entrada.html',
   styleUrl: './entrada.scss'
 })

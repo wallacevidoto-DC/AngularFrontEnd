@@ -17,7 +17,8 @@ import { EntradasViewerDto } from '../../entrada/index.interface';
 
 @Component({
   selector: 'app-entrada-conferencia-modal',
-  imports: [CommonModule, FormsModule, BaseModalComponent, AddProdutoModal, MatIconModule, MatTooltipModule, MatSnackBarModule],
+  standalone:true,
+  imports: [CommonModule, FormsModule, BaseModalComponent, MatIconModule, MatTooltipModule, MatSnackBarModule],
   templateUrl: './entrada-modal.html',
   styleUrl: './entrada-modal.scss'
 })
@@ -96,7 +97,6 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
 
   }
 
-  formData!: AddProduto;
 
   private dialog: MatDialog = inject(MatDialog)
 
@@ -198,13 +198,6 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
     this.bloco = '';
     this.apt = '';
     this.observacao = '';
-
-    // this.formData = {
-    //   codigo: '',
-    //   // fardo: 0,
-    //   quantidade: 0,
-    //   // quebra: 0,
-    // };
   }
   showTooltip() {
     this.tooltipDisabled = false;

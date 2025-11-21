@@ -1,7 +1,8 @@
 /* ======== LAYOUT GERAL ======== */
 section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  // grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
   padding: 20px;
   width: 100%;
@@ -21,7 +22,8 @@ section {
   padding: 12px 20px;
   font-size: 16px;
   border: none;
-  background: #1A73E8; /* Azul Google */
+  background: #1A73E8;
+  /* Azul Google */
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -29,13 +31,13 @@ section {
   align-items: center;
   gap: 10px;
   font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.20);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20);
   transition: 0.2s ease;
 }
 
 .toolbar button:hover {
   background: #1666c3;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }
 
 /* ======== FILTER BAR ======== */
@@ -61,7 +63,7 @@ section {
 .filter-bar input:focus {
   outline: none;
   border-color: #1A73E8;
-  box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
 }
 
 .filter-bar input {
@@ -74,20 +76,21 @@ section {
   border-radius: 12px;
   padding-bottom: 12px;
   box-shadow:
-    0px 3px 5px -1px rgba(0,0,0,0.2),
-    0px 6px 10px 0px rgba(0,0,0,0.14),
-    0px 1px 18px 0px rgba(0,0,0,0.12);
+    0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12);
   transition: 0.2s ease;
-      display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // max-width: 70%;
 }
 
 .estoque-card:hover {
   transform: translateY(-3px);
   box-shadow:
-    0px 4px 8px -1px rgba(0,0,0,0.3),
-    0px 8px 16px 0px rgba(0,0,0,0.2);
+    0px 4px 8px -1px rgba(0, 0, 0, 0.3),
+    0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 
 /* ======== DATA GRID ======== */
@@ -133,7 +136,7 @@ section {
   bottom: 1.6rem;
   right: 1.6rem;
   z-index: 1000;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.25s ease-in-out;
 }
 
@@ -156,7 +159,11 @@ section {
   }
 
   .filter-bar input {
-    width:94%;
+    width: 94%;
+  }
+
+  section {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -167,6 +174,9 @@ section {
   }
 
   .data-grid {
+    grid-template-columns: 1fr;
+  }
+  section {
     grid-template-columns: 1fr;
   }
 }
