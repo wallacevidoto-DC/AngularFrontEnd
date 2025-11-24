@@ -19,7 +19,7 @@ export class SaidaModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr:ToastrService  = inject (ToastrService);
+  private toastr: ToastrService = inject(ToastrService);
   protected formData: EstoqueItem | null = null;
   protected formDataQtd!: number;
   protected formDataObs: string | null = null;
@@ -38,7 +38,7 @@ export class SaidaModal extends ModalBase implements OnInit {
           this.onCloseBase()
         }
         else {
-         this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
         }
       }
     });
@@ -49,6 +49,7 @@ export class SaidaModal extends ModalBase implements OnInit {
   openx(data?: EstoqueItem) {
     this.isOpen = true;
     this.onClear();
+    this.formDataQtd = data?.quantidade ?? 0;
     if (data) {
       this.formData = data
     }
@@ -56,6 +57,10 @@ export class SaidaModal extends ModalBase implements OnInit {
 
 
   submit() {
+    if (!this.formDataQtd) {
+      this.toastr.warning('Digite uma quantidade válida.', 'Atenção');
+      return;
+    }
     if (this.wsService.UserCurrent) {
       if (this.formData) {
         const saidaDto: SaidaDto = {
@@ -79,7 +84,7 @@ export class SaidaModal extends ModalBase implements OnInit {
     this.formData = null;
 
     this.formDataQtd = 0;
-    this.formDataObs=null
+    this.formDataObs = null
   }
 
 }

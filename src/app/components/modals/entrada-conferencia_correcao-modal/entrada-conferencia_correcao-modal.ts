@@ -7,10 +7,11 @@ import { LoadingService } from '../loading-page/LoadingService.service';
 import { ToastrService } from 'ngx-toastr';
 import { EntradasViewerDto } from '../../entrada/index.interface';
 import { CorrecaoEntrada } from './index.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-entrada-conferencia_correcao-modal',
-  standalone:true,
+  standalone: true,
   imports: [CommonModule, FormsModule, BaseModalComponent],
   templateUrl: './entrada-conferencia_correcao-modal.html',
   styleUrl: './entrada-conferencia_correcao-modal.scss'
@@ -22,6 +23,10 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
   private toastr: ToastrService = inject(ToastrService);
+
+  private sub!: Subscription;
+
+
   protected formData: EntradasViewerDto = {
     EntradaId: 0,
     Tipo: '',
@@ -42,7 +47,7 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
 
   ngOnInit(): void {
 
-    this.wsService.messages$.subscribe(data => {
+    this.sub = this.wsService.messages$.subscribe(data => {
 
       if (!data) return;
 
@@ -61,7 +66,10 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
 
   }
 
-
+  override onCloseBase() {
+    this.sub?.unsubscribe();
+    super.onCloseBase();
+  }
   openx(data?: EntradasViewerDto) {
     this.isOpen = true;
     this.onClear();
@@ -95,13 +103,13 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
     if (this.wsService.UserCurrent && this.formData) {
 
       const correcaoDto: CorrecaoEntrada = {
-         tipo: "CR. CONFERÊNCIA",
+        tipo: "CR. CONFERÊNCIA",
         userId: this.wsService.UserCurrent.UserId,
-        conferenciaId:this.formData.EntradaId,
-        qtd_conferida:this.formData.QtdConferida,
-        dataf:this.converterMesAno(this.formData.DataF.toString()),
-        semf:this.formData.SemF,
-        lote:this.formData.Lote
+        conferenciaId: this.formData.EntradaId,
+        qtd_conferida: this.formData.QtdConferida,
+        dataf: this.converterMesAno(this.formData.DataF.toString()),
+        semf: this.formData.SemF,
+        lote: this.formData.Lote
       };
       this.wsService.send({
         action: 'correcao_entrada',

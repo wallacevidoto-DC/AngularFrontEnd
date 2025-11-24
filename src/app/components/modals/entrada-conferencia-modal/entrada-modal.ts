@@ -14,10 +14,11 @@ import { EntradaDto, Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from '
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
 import { EntradasViewerDto } from '../../entrada/index.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-entrada-conferencia-modal',
-  standalone:true,
+  standalone: true,
   imports: [CommonModule, FormsModule, BaseModalComponent, MatIconModule, MatTooltipModule, MatSnackBarModule],
   templateUrl: './entrada-modal.html',
   styleUrl: './entrada-modal.scss'
@@ -33,6 +34,8 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
   private _snackBar = inject(MatSnackBar);
   protected OpenSub: boolean = true;
 
+  private sub!: Subscription;
+
   public WT = Origem;
   public Origem = Origem;
   tooltipDisabled = true;
@@ -42,13 +45,13 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
   rua: string = '';
   bloco: string = '';
   apt: string = '';
-  EntradaId?:number;
+  EntradaId?: number;
   observacao: string = '';
 
 
   ngOnInit(): void {
 
-    this.wsService.messages$.subscribe(data => {
+    this.sub = this.wsService.messages$.subscribe(data => {
 
       if (!data) return;
 
@@ -86,7 +89,12 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
           this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
           this.wsService.send({ action: 'get_estoque' });
           this.wsService.send({ action: 'get_estoque_entrada' });
+          console.log('fechadno');
+          
           this.onCloseBase()
+
+          console.log('fechado');
+          
         }
         else {
           this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
@@ -96,7 +104,10 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
     });
 
   }
-
+  override onCloseBase() {
+    this.sub?.unsubscribe();
+    super.onCloseBase();
+  }
 
   private dialog: MatDialog = inject(MatDialog)
 
@@ -104,18 +115,18 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
     this.isOpen = true;
     this.onClear();
     this.EntradaId = itemData.EntradaId;
-    
+
     this.produtos.push({
-      codigo:itemData.ProdutoCodigo,
-      descricao:itemData.ProdutoDescricao,
-      dataf:itemData.DataF,
-      semf:itemData.SemF,
-      lote:itemData.Lote,
-      produtoId:itemData.ProdutoId,
-      quantidade:itemData.QtdConferida,
-      propsPST:{
-        isModified:false,
-        origem:Origem.OUT
+      codigo: itemData.ProdutoCodigo,
+      descricao: itemData.ProdutoDescricao,
+      dataf: itemData.DataF,
+      semf: itemData.SemF,
+      lote: itemData.Lote,
+      produtoId: itemData.ProdutoId,
+      quantidade: itemData.QtdConferida,
+      propsPST: {
+        isModified: false,
+        origem: Origem.OUT
       }
     })
   }
@@ -170,7 +181,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
         observacao: this.observacao,
         produtos: produtoInsert,
         //@ts-ignore
-        EntradaId:this.EntradaId
+        EntradaId: this.EntradaId
       };
 
       console.log('movimentacaoDto:', movimentacaoDto);
