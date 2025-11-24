@@ -53,6 +53,11 @@ export class Estoque implements OnInit {
       if (data && data.type === 'estoque') {
         const lista = data.produtos ?? data.dados;
         this.dadosEstoque = Array.isArray(lista) ? lista : [];
+        this.dadosEstoque.sort((a, b) => {
+          const da = new Date(a.dataL).getTime();
+          const db = new Date(b.dataL).getTime();
+          return db - da; 
+        });
         this.loadingService.hide();
       }
 

@@ -15,12 +15,13 @@ import { EntradaConferenciaModal } from "../modals/entrada-conferencia-modal/ent
 
 @Component({
   selector: 'app-entrada',
-  standalone:true,
-  imports: [CommonModule,  FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal],
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal],
   templateUrl: './entrada.html',
   styleUrl: './entrada.scss'
 })
 export class Entrada implements OnInit {
+
 
   @Output() statusChange = new EventEmitter<string>();
 
@@ -43,16 +44,18 @@ export class Entrada implements OnInit {
     });
     this.wsService.messages$.subscribe(data => {
 
-      if(!data) return
+      if (!data) return
 
       if (data.type === 'get_estoque_entrada_resposta') {
         const lista = data.dados;
         this.dadosEstoque = Array.isArray(lista) ? lista : [];
         this.loadingService.hide();
-        console.log('lista',lista);
-        
-      }
+        console.log('lista', lista);
 
+      }
+      else if (data.type === 'remove_estoque_entrada_resposta') {
+        this.wsService.send({ action: 'get_estoque_entrada' });
+      }
     });
 
     window.addEventListener('scroll', () => {
@@ -79,20 +82,15 @@ export class Entrada implements OnInit {
   }
 
 
-
+  remover(ent: EntradasViewerDto) {
+    if (confirm('Deseja deletar esse item')) {
+      this.wsService.send({ action: 'remove_estoque_entrada', data: ent });
+    }
+  }
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // enviar(dados: any) {
-  //   if (this.socket && this.socket.readyState === WebSocket.OPEN) {
 
-  //     this.socket.send(JSON.stringify(dados));
-  //   }
-  // }
-
-  enviar(dados: any) {
-    // this.wsService.send(dados);
-  }
 }

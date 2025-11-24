@@ -180,3 +180,15 @@ section {
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 768px) {
+
+  .acoes button {
+    font-size: 0.55rem;
+    mat-icon {
+      margin-right: 4px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
