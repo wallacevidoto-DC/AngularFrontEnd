@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, NgZone, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, NgZone, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';;
 import { WebSocketService } from '../../service/ws.service';
@@ -12,20 +12,28 @@ import { EntradasViewerDto } from './index.interface';
 import { RouterModule } from '@angular/router';
 import { EntradaConferenciaCorrecaoModal } from '../modals/entrada-conferencia_correcao-modal/entrada-conferencia_correcao-modal';
 import { EntradaConferenciaModal } from "../modals/entrada-conferencia-modal/entrada-modal";
+import { SelectOperation } from "../modals/select-operation/select-operation";
+import { OperationSelect } from '../modals/select-operation/index.interface';
+import { EntradaPickingModal } from "../modals/entrada-picking-modal/entrada-picking-modal";
 
 @Component({
   selector: 'app-entrada',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal],
+  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal, SelectOperation, EntradaPickingModal],
   templateUrl: './entrada.html',
   styleUrl: './entrada.scss'
 })
 export class Entrada implements OnInit {
-
-
   @Output() statusChange = new EventEmitter<string>();
 
+  
+  @ViewChild('selectOP') selectOP!: any;
+  @ViewChild('entradaModal') entradaModal!: any;
+  @ViewChild('pickingModal') pickingModal!: any;
+  
   dadosEstoque: EntradasViewerDto[] = [];
+  itemSelecionado: EntradasViewerDto|null = null;
+
   filtroColuna = 'codigo';
   entradaPesquisa = '';
   showBtnTopo = false;
@@ -92,5 +100,34 @@ export class Entrada implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  onAbrirSelect(item: any) {
+    this.itemSelecionado = item;
+    this.selectOP.isOpen = true;
+  }
+
+  // RECEBE PICKING ou COMUM
+  returnSelect($event:OperationSelect) {
+    if (!$event.op || !this.itemSelecionado) return;
+
+    if ($event.op === 'PICKING') {
+      // this.itemSelecionado.QtdConferida = $event.quantidade
+      this.pickingModal.openx({
+        ...this.itemSelecionado,
+        QtdConferida:$event.quantidade
+      });
+         
+    }
+
+    if ($event.op === 'COMUM') {
+      // this.itemSelecionado.QtdConferida = $event.quantidade
+      this.entradaModal.openx({
+        ...this.itemSelecionado,
+        QtdConferida:$event.quantidade
+      });
+    }
+
+    // limpa depois de usar
+    this.itemSelecionado = null;
+  }
 
 }

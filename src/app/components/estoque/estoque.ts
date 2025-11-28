@@ -14,6 +14,9 @@ import { LoadingPage } from "../../components/modals/loading-page/loading-page";
 import { LoadingService } from '../../components/modals/loading-page/LoadingService.service';
 import { MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard } from "@angular/material/card";
 import { EstoqueItem } from './index.interface';
+import { SelectOperation } from "../modals/select-operation/select-operation";
+import { OperationSelect } from '../modals/select-operation/index.interface';
+import { EntradaPickingModal } from '../modals/entrada-picking-modal/entrada-picking-modal';
 
 @Component({
   selector: 'app-estoque',
@@ -22,11 +25,14 @@ import { EstoqueItem } from './index.interface';
     SaidaModal,
     TransferenciaModal,
     CorrecaoModal, MatButtonModule,
-    MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard],
+    MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaPickingModal],
   templateUrl: './estoque.html',
   styleUrl: './estoque.scss'
 })
 export class Estoque implements OnInit {
+returnSelect($event: OperationSelect) {
+throw new Error('Method not implemented.');
+}
 
   @Output() statusChange = new EventEmitter<string>();
 

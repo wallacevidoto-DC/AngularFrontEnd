@@ -13,6 +13,7 @@
 
 <div class="toolbar">
   <button (click)="entradaModal.openx()" title="Nova Entrada"><mat-icon>archive</mat-icon> Nova Entrada</button>
+  <button (click)="pickingModal.isOpen =true" title="Novo Picking Entrada"><mat-icon>how_to_vote</mat-icon> Novo Picking</button>
 </div>
 
 <div class="filter-bar">
@@ -88,4 +89,6 @@
 <app-saida-modal #saidaModal (submitForm)="enviar($event)"></app-saida-modal>
 <app-transferencia-modal #transferenciaModal (submitForm)="enviar($event)"></app-transferencia-modal>
 <app-correcao-modal #correcaoModal (submitForm)="enviar($event)"></app-correcao-modal>
+
+<app-entrada-picking-modal #pickingModal ></app-entrada-picking-modal>
 

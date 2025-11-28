@@ -1,0 +1,30 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onOpenBase()" (closeModal)="onCloseBase()" title="Seleção"
+  icon="touch_app">
+  <div class="modal-content">
+
+    @if (isDefault) {
+    <!-- INPUT QUANTIDADE -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Quantidade</mat-label>
+      <input type="number" matInput [(ngModel)]="quantidade" min="1" placeholder="Digite a quantidade" />
+    </mat-form-field>
+    }
+
+
+    <!-- BOTOES PICKING / COMUM -->
+    <div class="button-group">
+      <button mat-raised-button class="option-btn" (click)="selecionarTipo('PICKING')">
+        <mat-icon>inventory_2</mat-icon>
+        Picking
+      </button>
+
+      <button mat-raised-button class="option-btn" (click)="selecionarTipo('COMUM')">
+        <mat-icon>inbox</mat-icon>
+        Comum
+      </button>
+    </div>
+
+
+
+  </div>
+</app-base-modal>

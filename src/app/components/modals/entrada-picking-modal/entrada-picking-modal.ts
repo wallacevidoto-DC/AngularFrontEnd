@@ -17,13 +17,13 @@ import { EntradasViewerDto } from '../../entrada/index.interface';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-entrada-conferencia-modal',
+  selector: 'app-entrada-picking-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseModalComponent, MatIconModule, MatTooltipModule, MatSnackBarModule],
-  templateUrl: './entrada-modal.html',
-  styleUrl: './entrada-modal.scss'
+  imports: [CommonModule, FormsModule, BaseModalComponent, MatIconModule, MatTooltipModule, MatSnackBarModule, AddProdutoModal],
+  templateUrl: './entrada-picking-modal.html',
+  styleUrl: './entrada-picking-modal.scss'
 })
-export class EntradaConferenciaModal extends ModalBase implements OnInit {
+export class EntradaPickingModal extends ModalBase implements OnInit {
 
   @Input() itemData: any = null;
   @Output() submitForm = new EventEmitter<any>();
@@ -55,35 +55,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
 
       if (!data) return;
 
-      if (data.type === 'get_address_resposta') {
-        this.temProdutosIn = States.LOAD;
-
-        if (data.status === "ok" && data.dados) {
-          const produtosInEndereco = data.dados as ResponseGetAddress[];
-
-          const produtosSemIn = this.produtos.filter(x => x.propsPST.origem !== Origem.IN);
-
-          const novosProdutosIn: ProdutoSpDto[] = produtosInEndereco.map(p => ({
-            produtoId: p.ProdutoId,
-            codigo: p.Codigo,
-            descricao: p.Descricao,
-            lote: p.Lote,
-            dataf: p.DataF,
-            semf: p.SemF,
-            quantidade: p.Quantidade,
-            enderecoId: p.EstoqueId,
-            propsPST: { isModified: false, origem: Origem.IN } as PropsPST
-          }));
-
-          this.produtos = [...produtosSemIn, ...novosProdutosIn];
-        }
-        else {
-          this._snackBar.open(data.mensagem, "OK");
-        }
-        this.temProdutosIn = States.COMPLETE;
-        this.loadingService.hide();
-      }
-      else if (data.type === 'entrada_conferencia_resposta') {
+       if (data.type === 'picking_resposta') {
 
         if (data.status === 'ok') {
           this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
@@ -151,12 +123,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
     this.loadingService.show();
   }
 
-  submitE() {
-
-    if (!this.rua || !this.bloco || !this.apt) {
-      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
-      return;
-    }
+  submitE() {    
 
     if (this.wsService.UserCurrent) {
       const produtoInsert = this.produtos.filter(p => p.propsPST.origem === Origem.OUT);
@@ -177,10 +144,8 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
         EntradaId: this.EntradaId
       };
 
-      console.log('movimentacaoDto:', movimentacaoDto);
-
       this.wsService.send({
-        action: 'entrada_conferencia',
+        action: 'picking',
         data: movimentacaoDto
       });
       this.loadingService.show();

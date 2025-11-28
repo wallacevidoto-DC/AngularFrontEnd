@@ -20,6 +20,7 @@
 
 <section>
   <mat-card *ngFor="let item of filtrados" class="estoque-card">
+    
     <mat-card-header>
       <mat-card-title>{{ item.ProdutoCodigo }} - {{ item.ProdutoDescricao }}</mat-card-title>
       <mat-card-subtitle>CIF: {{ item.CifsNome??"N/A"  }} | LOTE: {{ item?.Lote ?? "N/A"}}</mat-card-subtitle>
@@ -52,7 +53,67 @@
     </mat-card-content>
 
     <mat-card-actions class="acoes">
-      <button mat-flat-button (click)="entradaModal.openx(item)" color="primary">
+
+      <!-- Quando clicar, salva o item e abre a modal de seleção -->
+      <button mat-flat-button 
+              (click)="onAbrirSelect(item)" 
+              color="primary">
+        <mat-icon>exit_to_app</mat-icon>
+        ENTRADA
+      </button>
+
+      <button mat-flat-button color="accent" (click)="correcaoModal.openx(item)">
+        <mat-icon>edit</mat-icon>
+        CORREÇÃO
+      </button>
+
+      <button mat-flat-button color="warn" (click)="remover(item)">
+        <mat-icon>remove_circle_outline</mat-icon>
+        REMOVER
+      </button>
+
+    </mat-card-actions>
+
+  </mat-card>
+</section>
+
+<!-- <section>
+  <mat-card *ngFor="let item of filtrados" class="estoque-card">
+    <mat-card-header>
+      <mat-card-title>{{ item.ProdutoCodigo }} - {{ item.ProdutoDescricao }}</mat-card-title>
+      <mat-card-subtitle>CIF: {{ item.CifsNome??"N/A"  }} | LOTE: {{ item?.Lote ?? "N/A"}}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="data-grid">
+        <div class="data-item">
+          <span class="label">Data de Fabricação:</span>
+          <span class="value">{{ item.DataF }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label">Semana de Fabricação:</span>
+          <span class="value">{{ item.SemF }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label">Qtd. Conferida:</span>
+          <span class="value">{{ item.QtdConferida }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label">Qtd. Entrada:</span>
+          <span class="value">{{ item.QtdEntrada??0 }}</span>
+        </div>
+        <div class="data-item">
+          <span class="label timestamp-label">Criado em:</span>
+          <span class="value">{{ item.CreateAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+        </div>
+
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions class="acoes">
+      <button mat-flat-button 
+      (click)="selectOP.isOpen = true" 
+      color="primary">
         <mat-icon>exit_to_app</mat-icon>
         ENTRADA
       </button>
@@ -68,7 +129,9 @@
       
     </mat-card-actions>
   </mat-card>
-</section>
+</section> -->
 
 <app-entrada-conferencia-modal #entradaModal ></app-entrada-conferencia-modal>
+<app-entrada-picking-modal #pickingModal ></app-entrada-picking-modal>
 <app-entrada-conferencia_correcao-modal #correcaoModal></app-entrada-conferencia_correcao-modal>
+<app-select-operation #selectOP (returnSelect)="returnSelect($event)"></app-select-operation>

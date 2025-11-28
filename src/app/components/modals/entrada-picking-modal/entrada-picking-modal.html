@@ -1,0 +1,75 @@
+@if (OpenSub) {
+<app-base-modal [isOpen]="isOpen" (openModal)="onCloseBase()" (closeModal)="onCloseBase()" title="Novo Picking"
+  icon="archive">
+   <section class="section-group">
+    <legend>Dados do Produto</legend>
+    <table class="produtos-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <!-- <th>Descrição</th> -->
+          <th>Quant.</th>
+          <th>Data Fab.</th>
+          <th>Sem Fab.</th>
+          <th>Lote</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of produtos; track $index) {
+        <tr [ngClass]="{
+    'wt-in': item.propsPST.origem === Origem.IN,
+    'wt-out': item.propsPST.origem === Origem.OUT
+  }">
+
+          <td (click)="mostrarDescricao(item)" style="cursor:pointer; text-decoration: underline;">
+            {{ item.codigo }}
+          </td>
+
+          <!-- <td>{{ item.descricao }}</td> -->
+          <td>{{ item.quantidade }}</td>
+          <td>{{ item.dataf }}</td>
+          <td>{{ item.semf }}</td>
+          <td>{{ item.lote }}</td>
+
+          <td>
+            <button mat-icon-button color="warn" [disabled]="item.propsPST.origem !== WT.OUT"
+              (click)="deletarItem(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+
+        </tr>
+        }
+      </tbody>
+    </table>
+
+
+    <div class="actions">
+      <button style="font-size: xx-small;background-color: rgba(0, 102, 255, 0.308);"
+        (click)="addProduto.openx();OpenSub=false;">
+        <mat-icon>add_circle</mat-icon>Adicionar</button>
+      <!-- <button style="font-size: xx-small;background-color: rgba(255, 0, 0, 0.404);">
+        <mat-icon>remove_circle</mat-icon>Remover</button> -->
+    </div>
+
+    <div class="legenda">
+      <span class="legenda-item wt-out">Produtos a registrar</span>
+      <span class="legenda-item wt-in">Produto existente no endereço</span>
+    </div>
+  </section>
+
+
+  <section class="section-group">
+    <legend>Observações</legend>
+    <textarea rows="3" [(ngModel)]="observacao"></textarea>
+  </section>
+
+  <div class="section-group">
+    <button (click)="submitE()" class="btn-primary">Salvar</button>
+    <button class="btn-secondary">Cancelar</button>
+  </div>
+
+</app-base-modal>
+}
+<app-add-produto-modall #addProduto (submitForm)="enviar($event)" (close)="OpenSub=true"></app-add-produto-modall>
