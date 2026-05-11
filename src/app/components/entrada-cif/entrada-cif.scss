@@ -34,6 +34,7 @@
 
     &:hover {
         background: #1a73e8c2;
+        box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
     }
 
     &:active {
@@ -45,6 +46,48 @@
         &:hover {
             background: #2c8a46;
         }
+    }
+}
+
+.cif-badge {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(23, 101, 204, 0.1);
+    color: #1765cc;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    width: fit-content;
+    font-size: 0.8rem;
+    border: 1px solid rgba(23, 101, 204, 0.2);
+
+    mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.cif-error-badge {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(217, 48, 37, 0.1);
+    color: #d93025;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    width: fit-content;
+    font-size: 0.8rem;
+    border: 1px solid rgba(217, 48, 37, 0.2);
+
+    mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
     }
 }
 

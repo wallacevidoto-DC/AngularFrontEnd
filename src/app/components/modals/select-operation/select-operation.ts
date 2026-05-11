@@ -6,10 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { OperationSelect } from './index.interface';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-select-operation',
+  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,
@@ -23,7 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SelectOperation extends ModalBase implements OnInit {
 
-  private toastr = inject(ToastrService);
+  private toastr = inject(NgToastService);
 
   @Input() isDefault: boolean = true;
   @Output() returnSelect = new EventEmitter<OperationSelect>();
@@ -48,7 +49,7 @@ export class SelectOperation extends ModalBase implements OnInit {
 
     // valida quantidade
     if (!this.quantidade || this.quantidade <= 0) {
-      this.toastr.warning("A quantidade deve ser maior que 0", "Alerta");
+      this.toastr.warning("A quantidade deve ser maior que 0", "Alerta", 10000);
       return;
     }
 

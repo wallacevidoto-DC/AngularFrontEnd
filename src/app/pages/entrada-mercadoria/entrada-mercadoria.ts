@@ -6,12 +6,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { MatCard } from "@angular/material/card";
 import { MatIcon } from "@angular/material/icon";
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 import { EntradaLivre } from "../../components/entrada-livre/entrada-livre";
+import { CifService } from '../../service/cif.service';
+import { WebSocketService } from '../../service/ws.service';
+import { NgToastService } from 'ng-angular-popup';
 
 
 export interface ProdutoResponse {
@@ -71,14 +77,19 @@ export class DialogOverviewExampleDialog {
 @Component({
   selector: 'app-entrada-mercadoria',
   standalone: true, // Adicionado standalone para Angular 15+ se for o caso
-  imports: [ MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatTabsModule, MatCard, MatIcon, RouterModule, EntradaLivre],
+  imports: [ MatTabsModule, FormsModule, CommonModule, MatListModule, ReactiveFormsModule, MatCardModule, MatIconModule, MatRippleModule, MatButtonModule, RouterModule, EntradaLivre, RouterOutlet],
   templateUrl: './entrada-mercadoria.html',
   styleUrl: './entrada-mercadoria.scss'
 })
 export class EntradaMercadoria implements OnInit {
 
   readonly dialog = inject(MatDialog);
+  private cifService: CifService = inject(CifService);
+  private wsService: WebSocketService = inject(WebSocketService);
+  private toastr: NgToastService = inject(NgToastService);
+
   protected cifId = signal(0);
+  protected cifCod = signal<string | null>(null);
   TYPE_IMPUT = TYPE_IMPUT; 
 
   private route: ActivatedRoute = inject(ActivatedRoute);
@@ -87,39 +98,52 @@ export class EntradaMercadoria implements OnInit {
   protected menu: boolean = true;
   protected tipoEntrada: TYPE_IMPUT = TYPE_IMPUT.NONE
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const q = params['q'];
-      console.log("Q recebido:", q);
-      if (q === 'livre') {
-        this.tipoEntrada = TYPE_IMPUT.LIVRE
-        this.menu = false;
-      }
+  ngOnInit(): void {}
 
-      else if (q?.startsWith('cif=')) {
-        const codigoCif = q.split('=')[1];
-        this.cifId.set(codigoCif);
-        this.tipoEntrada = TYPE_IMPUT.CIF
-        this.menu = false;
-      }
-      else {
-
-        this.menu = true;
-        this.tipoEntrada = TYPE_IMPUT.NONE
-
-      }
-    });
+  isMenuVisible(): boolean {
+    return this.router.url === '/entrada-mercadoria';
   }
 
+  cliqueCif() {
+    // Verificar se já existe uma sessão de CIF ativa ou produtos no localStorage de CIF
+    const cifSalvo = localStorage.getItem('entradaCif');
+    const activeCif = this.cifService.currentCif;
+
+    if (activeCif || (cifSalvo && JSON.parse(cifSalvo).length > 0)) {
+      // Se já tem dados, vai direto para a rota de CIF sem perguntar
+      this.router.navigate(['/entrada-mercadoria/cif']);
+    } else {
+      // Se não tem nada, abre a modal para digitar a CIF
+      this.abrirDialogCIF();
+    }
+  }
+
+  isCifRoute(): boolean {
+    return this.router.url.includes('/entrada-mercadoria/cif');
+  }
 
   abrirDialogCIF() {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog);
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        this.cifId.set(result);
-        this.router.navigate(['/entrada-mercadoria'], {
-          queryParams: { q: `cif=${result}` }
+      if (result) {
+        // Validar/Criar CIF via WS
+        this.wsService.send({
+          action: 'validar_cif',
+          data: { cifCod: result.toUpperCase() } 
+        });
+
+        // Ouvir a resposta uma única vez
+        const sub = this.wsService.messages$.subscribe(msg => {
+          if (msg && msg.type === 'validar_cif_resposta') {
+            if (msg.status === 'ok') {
+              this.cifService.setCif({ cifCod: msg.dados.cifCod, cifId: msg.dados.cifId });
+              this.router.navigate(['/entrada-mercadoria/cif']);
+            } else {
+              this.toastr.danger(msg.mensagem || 'CIF inválida', 'Erro', 10000);
+            }
+            sub.unsubscribe();
+          }
         });
       }
     });

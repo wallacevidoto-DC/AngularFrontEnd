@@ -21,7 +21,6 @@
           <div class="campo">
             <label>Qtd.:</label>
             <input type="number" [(ngModel)]="formData.QtdConferida" name="quantidade" placeholder="Ex.: 0" required />
-            Quantidade é obrigatória.
           </div>
 
 
@@ -40,7 +39,11 @@
           <div class="campo">
             <label>Lote:</label>
             <input type="text" [(ngModel)]="formData.Lote" name="lote" placeholder="Ex.: GR2" required />
+          </div>
 
+          <div class="campo">
+            <label>CIF:</label>
+            <input type="text" [(ngModel)]="formData.CifsNome" name="cif" placeholder="Ex.: A001/26" />
           </div>
 
         </div>

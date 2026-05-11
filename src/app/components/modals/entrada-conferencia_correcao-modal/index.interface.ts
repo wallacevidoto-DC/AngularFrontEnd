@@ -8,4 +8,5 @@ export interface CorrecaoEntrada {
   dataf: string;
   semf: number;
   lote: string;
+  cifName?: string;
 }

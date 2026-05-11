@@ -3,6 +3,7 @@ import { inject, Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../components/modals/login/login';
 import { LoadingService } from '../components/modals/loading-page/LoadingService.service';
+import { CifService } from './cif.service';
 
 @Injectable({
   providedIn: 'root' // garante singleton
@@ -14,6 +15,7 @@ export class WebSocketService {
   private _status = new BehaviorSubject<string>('Desconectado');
   private _messages = new BehaviorSubject<any>(null);
   private loadingService: LoadingService = inject(LoadingService)
+  private cifService: CifService = inject(CifService);
   private isConnected = false;
 
   private reconnectTimeout: any;
@@ -79,6 +81,14 @@ export class WebSocketService {
 
   send(dados: any) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      
+      // Auto-anexar CIF se houver uma sessão ativa e for uma ação de dados
+      const activeCif = this.cifService.currentCif;
+      if (activeCif && dados.data && typeof dados.data === 'object' && !dados.data.cifCod) {
+        dados.data.cifId = activeCif.cifId;
+        dados.data.cifCod = activeCif.cifCod;
+      }
+
       this.socket.send(JSON.stringify(dados));
     } else {
       console.warn('WebSocket não está aberto');

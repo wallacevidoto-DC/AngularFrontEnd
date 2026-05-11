@@ -3,76 +3,141 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 24px;
-    padding: 40px;
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-    min-height: 100vh;
+    padding: 20px;
+    background: transparent;
 }
 
 .menu-card {
     display: flex;
     align-items: center;
     width: 300px;
-    height: 150px;
-    padding: 16px;
+    padding: 20px;
     cursor: pointer;
     border-radius: 16px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    gap: 10px;
-}
+    gap: 15px;
+    border: 2px solid transparent;
 
-.menu-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    &.active-card {
+        border-color: #1765cc;
+        background: rgba(23, 101, 204, 0.03);
+        box-shadow: 0 8px 20px rgba(23, 101, 204, 0.2);
+    }
 }
 
 .icon {
-    font-size: 48px;
-    margin-right: 16px;
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .icon-estoque {
-    color: #2204ca;
-    /* verde */
+    color: #1765cc;
 }
 
 .icon-entrada {
-    color: #009e0e;
-    /* laranja */
+    color: #2e7d32;
 }
 
-.card-text h3 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
+.card-text {
+    h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    p {
+        margin: 4px 0 0;
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        line-height: 1.4;
+    }
 }
 
-.card-text p {
-    margin: 4px 0 0;
-    font-size: 14px;
-    color: #666;
-}
-
-.mat-icon {
-    width: 50px;
-    height: 50px;
+.content-container {
+    padding: 0 20px 40px;
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
     align-items: center;
+    width: 100%;
+}
+
+/* ESTILO PREMIUM PARA O CABEÇALHO DE VOLTAR */
+.sub-page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin: 20px 0;
+    width: 100%;
+    max-width: 980px;
+    box-sizing: border-box;
+
+    .back-btn {
+        background: #f1f3f4;
+        color: #5f6368;
+        transition: all 0.2s;
+        
+        &:hover {
+            background: #e8eaed;
+            color: #202124;
+            transform: scale(1.05);
+        }
+        
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .header-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #202124;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
 }
 
 @media (max-width: 700px) {
-    .menu-card {
-        // width: 90%;
-        justify-content: flex-start;
+    .menu-container {
+        padding: 15px;
+        gap: 12px;
     }
 
-    .menu-container {
-        align-content: flex-start;
+    .menu-card {
+        width: 100%;
+        max-width: none;
+        padding: 15px;
+    }
+
+    .sub-page-header {
+        margin: 10px 0;
+        padding: 8px 12px;
+        border-radius: 0;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        
+        .header-title {
+            font-size: 0.95rem;
+        }
+    }
+
+    .content-container {
+        padding: 0 0 20px;
     }
 }

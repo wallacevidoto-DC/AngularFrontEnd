@@ -1,0 +1,111 @@
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 10px 5px;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .info-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #e0e0e0;
+
+    mat-icon {
+      color: #1765cc;
+    }
+  }
+
+  .cif-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ff5252;
+    padding: 6px 12px;
+    background: rgba(255, 82, 82, 0.1);
+    border-radius: 20px;
+    width: fit-content;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &.has-cif {
+      color: #4caf50;
+      background: rgba(76, 175, 80, 0.1);
+    }
+  }
+}
+
+.cif-form-section {
+  .full-width-input {
+    width: 100%;
+  }
+
+  ::v-deep .mat-mdc-form-field-focus-overlay {
+    background-color: rgba(23, 101, 204, 0.05);
+  }
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cif-btn {
+  width: 100%;
+  padding: 24px 0 !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  &.validate {
+    background: linear-gradient(135deg, #1765cc 0%, #0d47a1 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(23, 101, 204, 0.3) !important;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(23, 101, 204, 0.4) !important;
+    }
+  }
+
+  &.generate {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3) !important;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4) !important;
+    }
+  }
+}

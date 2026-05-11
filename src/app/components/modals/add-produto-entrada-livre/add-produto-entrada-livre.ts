@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProdutoSpDto } from '../entrada-modal/index.interface';
 import { ProdutoResponse } from '../add-produto-modal/add-produto-modal';
 import { LeitorBarcode } from "../../../leitor-barcode/leitor-barcode";
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 
 
 export interface AddProduto {
@@ -34,6 +34,7 @@ export interface RespostaProdutoLivre {
 
 @Component({
   selector: 'app-add-produto-entrada-livre',
+  standalone: true,
   imports: [CommonModule, FormsModule, MatIcon, ReactiveFormsModule, BaseModalComponent, LeitorBarcode],
   templateUrl: './add-produto-entrada-livre.html',
   styleUrl: './add-produto-entrada-livre.scss',
@@ -46,7 +47,7 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
   private _snackBar = inject(MatSnackBar);
 
 
@@ -75,14 +76,14 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
 
       } else if (data.type === 'conferencia_livre_resposta') {
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           //@ts-ignore
           this.returnProdOk.emit(this.model);
           this.onCloseBase()
 
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
       this.loadingService.hide();

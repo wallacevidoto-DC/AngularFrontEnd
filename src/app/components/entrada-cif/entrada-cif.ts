@@ -1,34 +1,32 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatIcon } from "@angular/material/icon";
+import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent } from "@angular/material/card";
 import { AddProdutoEntradaLivre, RespostaProdutoLivre } from '../modals/add-produto-entrada-livre/add-produto-entrada-livre';
 import { ItemLista, ListaProdutosLivre } from "../lista-produtos-livre/lista-produtos-livre";
-import { MatIcon } from "@angular/material/icon";
-import { Router } from '@angular/router';
-import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent } from "@angular/material/card";
 import { CifService } from '../../service/cif.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-entrada-livre',
+  selector: 'app-entrada-cif',
   standalone: true,
   imports: [CommonModule, AddProdutoEntradaLivre, ListaProdutosLivre, MatIcon, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent],
-  templateUrl: './entrada-livre.html',
-  styleUrl: './entrada-livre.scss',
+  templateUrl: './entrada-cif.html',
+  styleUrl: './entrada-cif.scss',
 })
-export class EntradaLivre implements OnInit{
+export class EntradaCif implements OnInit {
 
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private cifService: CifService = inject(CifService);
-  private router: Router = inject(Router);
 
   meusProdutos: ItemLista[] = [];
-  storageKey: string = 'entradaLivre';
+  storageKey: string = 'entradaCif';
   cifCod: string | null = null;
 
-
   ngOnInit() {
-    this.storageKey = 'entradaLivre';
-    this.loadItems();
+    this.cifService.currentCif$.subscribe(cif => {
+      this.cifCod = cif ? cif.cifCod : null;
+      this.loadItems();
+    });
   }
 
   loadItems() {
@@ -38,8 +36,6 @@ export class EntradaLivre implements OnInit{
   }
 
   onProdutoRetornado($event: RespostaProdutoLivre) {
-    console.log('$event', $event);
-
     if ($event) {
       this.meusProdutos.push({
         codigo: $event.produto.Codigo,
@@ -49,16 +45,12 @@ export class EntradaLivre implements OnInit{
       localStorage.setItem(this.storageKey, JSON.stringify(this.meusProdutos));
       this.cdr.detectChanges();
     }
-    console.log("meusProdutos", this.meusProdutos);
-
   }
+
   finalizar() {
     localStorage.removeItem(this.storageKey);
-    if (this.cifCod) {
-      this.cifService.clearCif();
-    }
+    this.cifService.clearCif();
     this.meusProdutos = [];
     this.cdr.detectChanges();
   }
-
 }

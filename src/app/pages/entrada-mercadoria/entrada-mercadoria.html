@@ -1,11 +1,8 @@
-<!-- <app-leitor-barcode 
-  (produtoEncontrado)="adicionarProduto($any($event))"\> -->
-<div class="menu-container">
-@if (menu) {  
+<div class="menu-container" *ngIf="isMenuVisible()">
     <mat-card class="menu-card"
               matRipple
-              [routerLink]="['/entrada-mercadoria']"
-              [queryParams]="{ q: 'livre' }">
+              [routerLink]="['livre']"
+              routerLinkActive="active-card">
         <mat-icon class="icon icon-estoque">storage</mat-icon>
         <div class="card-text">
             <h3>Entrada Livre</h3>
@@ -16,18 +13,22 @@
     <mat-card
         class="menu-card"
         matRipple
-        (click)="abrirDialogCIF()">
+        (click)="cliqueCif()"
+        [class.active-card]="isCifRoute()">
         <mat-icon class="icon icon-entrada">description</mat-icon>
         <div class="card-text">
             <h3>Conferência CIF</h3>
             <p>Realize a entrada de mercadorias com o apoio do módulo CIF.</p>
         </div>
-    </mat-card>} 
+    </mat-card>
+</div>
 
-@switch (tipoEntrada) {
-  @case (TYPE_IMPUT.LIVRE) { <app-entrada-livre/>}
-  @case (TYPE_IMPUT.CIF) {
-   <h1>EM CONSTRUÇÃO </h1>
-  }
-}
+<div class="content-container">
+    <div class="sub-page-header" *ngIf="!isMenuVisible()">
+        <button mat-icon-button [routerLink]="['/entrada-mercadoria']" class="back-btn">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="header-title">{{ isCifRoute() ? 'Conferência CIF' : 'Entrada Livre' }}</span>
+    </div>
+    <router-outlet></router-outlet>
 </div>

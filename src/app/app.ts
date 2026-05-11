@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { NgToastModule } from 'ng-angular-popup';
 import { StatusWs } from "./components/status-ws/status-ws";
 import { WebSocketService } from './service/ws.service';
 import { LoadingPage } from "./components/modals/loading-page/loading-page";
@@ -10,7 +11,7 @@ import { LoginModalComponent } from './components/modals/login/login';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [StatusWs, LoadingPage, RouterOutlet],
+  imports: [StatusWs, LoadingPage, RouterOutlet, NgToastModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

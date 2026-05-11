@@ -1,0 +1,45 @@
+<div class="page-container">
+
+  <div class="header-section">
+    <button class="google-btn primary" (click)="addProduto.openx()">
+      <mat-icon>add</mat-icon>
+      Adicionar Produto (CIF)
+    </button>
+  </div>
+
+  <mat-card class="card-lista">
+    <mat-card-header>
+        <mat-card-title>Produtos Conferidos (CIF)</mat-card-title>
+        <mat-card-subtitle>
+            Conferência vinculada ao módulo CIF.
+            <div *ngIf="cifCod" class="cif-badge">
+                <mat-icon>verified</mat-icon>
+                <span>CIF ATIVA: {{ cifCod }}</span>
+            </div>
+            <div *ngIf="!cifCod" class="cif-error-badge">
+                <mat-icon>error</mat-icon>
+                <span>NENHUMA CIF SELECIONADA</span>
+            </div>
+        </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <app-lista-produtos-livre [items]="meusProdutos"/>
+    </mat-card-content>
+  </mat-card>
+
+  @if (meusProdutos.length > 0) {
+    <div class="footer-section">
+      <button class="google-btn success" (click)="finalizar()">
+        <mat-icon>check</mat-icon>
+        Finalizar Conferência CIF
+      </button>
+    </div>
+  }
+
+  <app-add-produto-entrada-livre
+    #addProduto
+    (returnProdOk)="onProdutoRetornado($event)">
+  </app-add-produto-entrada-livre>
+
+</div>

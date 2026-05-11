@@ -4,7 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { BaseModalComponent, ModalBase } from '../base-modal/base-modal.component';
 import { WebSocketService } from '../../../service/ws.service';
 import { LoadingService } from '../loading-page/LoadingService.service';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 import { EntradasViewerDto } from '../../entrada/index.interface';
 import { CorrecaoEntrada } from './index.interface';
 import { Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
 
   private sub!: Subscription;
 
@@ -53,12 +53,12 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
 
       if (data.type === 'correcao_entrada_resposta') {
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque_entrada' });
           this.onCloseBase()
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
       this.loadingService.hide();
@@ -109,7 +109,8 @@ export class EntradaConferenciaCorrecaoModal extends ModalBase implements OnInit
         qtd_conferida: this.formData.QtdConferida,
         dataf: this.converterMesAno(this.formData.DataF.toString()),
         semf: this.formData.SemF,
-        lote: this.formData.Lote
+        lote: this.formData.Lote,
+        cifName: this.formData.CifsNome
       };
       this.wsService.send({
         action: 'correcao_entrada',

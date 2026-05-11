@@ -12,7 +12,7 @@ import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
 import { LoadingService } from '../loading-page/LoadingService.service';
 import { EntradaDto, Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from './index.interface';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 import { EntradasViewerDto } from '../../entrada/index.interface';
 import { Subscription } from 'rxjs';
 
@@ -30,7 +30,7 @@ export class EntradaPickingModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
   private _snackBar = inject(MatSnackBar);
   protected OpenSub: boolean = true;
 
@@ -58,7 +58,7 @@ export class EntradaPickingModal extends ModalBase implements OnInit {
        if (data.type === 'picking_resposta') {
 
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque' });
           this.wsService.send({ action: 'get_estoque_entrada' });
           console.log('fechadno');
@@ -67,7 +67,7 @@ export class EntradaPickingModal extends ModalBase implements OnInit {
           
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
       this.loadingService.hide();
@@ -129,7 +129,7 @@ export class EntradaPickingModal extends ModalBase implements OnInit {
       const produtoInsert = this.produtos.filter(p => p.propsPST.origem === Origem.OUT);
 
       if (produtoInsert.length <= 0) {
-        this.toastr.warning('Adicione ao menos um produto.');
+        this.toastr.warning('Adicione ao menos um produto.', 'Atenção', 10000);
         return
       }
       const movimentacaoDto: EntradaDto = {
@@ -186,4 +186,4 @@ export class EntradaPickingModal extends ModalBase implements OnInit {
     //   this.produtos = this.produtos.filter(p => p !== item);
     // }
   }
-} 
+}

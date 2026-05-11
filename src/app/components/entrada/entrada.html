@@ -14,6 +14,7 @@
   <select [(ngModel)]="filtroColuna">
     <option value="codigo">Código</option>
     <option value="descricao">Descrição</option>
+    <option value="CifsNome">CIF</option>
   </select>
   <input type="text" [(ngModel)]="entradaPesquisa" placeholder="Pesquisar...">
 </div>
@@ -23,29 +24,29 @@
     
     <mat-card-header>
       <mat-card-title>{{ item.ProdutoCodigo }} - {{ item.ProdutoDescricao }}</mat-card-title>
-      <mat-card-subtitle>CIF: {{ item.CifsNome??"N/A"  }} | LOTE: {{ item?.Lote ?? "N/A"}}</mat-card-subtitle>
+      <mat-card-subtitle>CIF: <span style=" font-weight: bold;"> {{ item.CifsNome??"N/A"  }}</span> | LOTE{{ item?.Lote ?? "N/A"}}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <div class="data-grid">
         <div class="data-item">
-          <span class="label">Data de Fabricação:</span>
+          <span class="label">Data de Fabricação: </span>
           <span class="value">{{ item.DataF }}</span>
         </div>
         <div class="data-item">
-          <span class="label">Semana de Fabricação:</span>
+          <span class="label">Semana de Fabricação: </span>
           <span class="value">{{ item.SemF }}</span>
         </div>
         <div class="data-item">
-          <span class="label">Qtd. Conferida:</span>
+          <span class="label">Qtd. Conferida: </span>
           <span class="value">{{ item.QtdConferida }}</span>
         </div>
-        <div class="data-item">
+        <!-- <div class="data-item">
           <span class="label">Qtd. Entrada:</span>
           <span class="value">{{ item.QtdEntrada??0 }}</span>
-        </div>
+        </div> -->
         <div class="data-item">
-          <span class="label timestamp-label">Criado em:</span>
+          <span class="label timestamp-label">Criado em: </span>
           <span class="value">{{ item.CreateAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
         </div>
 
@@ -70,6 +71,11 @@
       <button mat-flat-button color="warn" (click)="remover(item)">
         <mat-icon>remove_circle_outline</mat-icon>
         REMOVER
+      </button>
+
+      <button mat-flat-button style="background-color: #7b1fa2; color: white;" (click)="onAbrirCifModal(item)">
+        <mat-icon>verified</mat-icon>
+        CIF
       </button>
 
     </mat-card-actions>
@@ -135,3 +141,4 @@
 <app-entrada-picking-modal #pickingModal ></app-entrada-picking-modal>
 <app-entrada-conferencia_correcao-modal #correcaoModal></app-entrada-conferencia_correcao-modal>
 <app-select-operation #selectOP (returnSelect)="returnSelect($event)"></app-select-operation>
+<app-entrada-cif-modal #cifModal></app-entrada-cif-modal>

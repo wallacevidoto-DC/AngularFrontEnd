@@ -15,11 +15,12 @@ import { EntradaConferenciaModal } from "../modals/entrada-conferencia-modal/ent
 import { SelectOperation } from "../modals/select-operation/select-operation";
 import { OperationSelect } from '../modals/select-operation/index.interface';
 import { EntradaPickingModal } from "../modals/entrada-picking-modal/entrada-picking-modal";
+import { EntradaCifModal } from "../modals/entrada-cif-modal/entrada-cif-modal";
 
 @Component({
   selector: 'app-entrada',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal, SelectOperation, EntradaPickingModal],
+  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal, SelectOperation, EntradaPickingModal, EntradaCifModal],
   templateUrl: './entrada.html',
   styleUrl: './entrada.scss'
 })
@@ -30,6 +31,7 @@ export class Entrada implements OnInit {
   @ViewChild('selectOP') selectOP!: any;
   @ViewChild('entradaModal') entradaModal!: any;
   @ViewChild('pickingModal') pickingModal!: any;
+  @ViewChild('cifModal') cifModal!: EntradaCifModal;
   
   dadosEstoque: EntradasViewerDto[] = [];
   itemSelecionado: EntradasViewerDto|null = null;
@@ -58,7 +60,6 @@ export class Entrada implements OnInit {
         const lista = data.dados;
         this.dadosEstoque = Array.isArray(lista) ? lista : [];
         this.loadingService.hide();
-        console.log('lista', lista);
 
       }
       else if (data.type === 'remove_estoque_entrada_resposta') {
@@ -81,6 +82,8 @@ export class Entrada implements OnInit {
         valor = item.ProdutoCodigo;
       } else if (this.filtroColuna === 'descricao' && item.ProdutoDescricao) {
         valor = item.ProdutoDescricao;
+      } else if (this.filtroColuna === 'CifsNome' && item.CifsNome) {
+        valor = item.CifsNome;
       } else {
         valor = String((item as any)[this.filtroColuna] ?? '');
       }
@@ -105,9 +108,19 @@ export class Entrada implements OnInit {
     this.selectOP.isOpen = true;
   }
 
+  onAbrirCifModal(item: EntradasViewerDto) {
+    this.cifModal.openx(item);
+  }
+
   // RECEBE PICKING ou COMUM
   returnSelect($event:OperationSelect) {
     if (!$event.op || !this.itemSelecionado) return;
+
+    // Validação: quantidade não pode ser negativa ou maior que a QtdConferida
+    if ($event.quantidade <= 0 || $event.quantidade > this.itemSelecionado.QtdConferida) {
+      alert(`A quantidade informada (${$event.quantidade}) não pode ser negativa ou maior que a quantidade conferida (${this.itemSelecionado.QtdConferida}).`);
+      return;
+    }
 
     if ($event.op === 'PICKING') {
       // this.itemSelecionado.QtdConferida = $event.quantidade

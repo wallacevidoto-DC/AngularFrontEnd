@@ -1,0 +1,40 @@
+<app-base-modal [isOpen]="isOpen" (openModal)="onOpenBase()" (closeModal)="onCloseBase()" title="Conferência CIF"
+  icon="verified">
+  <div class="modal-content">
+
+    <div class="header-info" *ngIf="itemSelecionado">
+      <div class="info-badge">
+        <mat-icon>inventory_2</mat-icon>
+        <span>{{ itemSelecionado.ProdutoCodigo }} - {{ itemSelecionado.ProdutoDescricao }}</span>
+      </div>
+      <div class="cif-status" [class.has-cif]="itemSelecionado.CifsNome">
+        <mat-icon>{{ itemSelecionado.CifsNome ? 'lock' : 'lock_open' }}</mat-icon>
+        <span>CIF ATUAL: {{ itemSelecionado.CifsNome ?? 'NENHUMA' }}</span>
+      </div>
+    </div>
+
+    <div class="cif-form-section">
+      <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>CÓDIGO CIF</mat-label>
+        <input matInput [(ngModel)]="cifCod" placeholder="Ex: A001/26" 
+               (keydown.enter)="validarCif()" 
+               style="text-transform: uppercase; font-weight: 700; letter-spacing: 2px; font-size: 1.2rem;" />
+        <mat-icon matSuffix color="primary">qr_code_2</mat-icon>
+        <mat-hint>Padrão A999/YY</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="actions-container">
+      <button mat-raised-button class="cif-btn validate" (click)="validarCif()">
+        <mat-icon>check_circle</mat-icon>
+        VALIDAR E VINCULAR
+      </button>
+
+      <button mat-raised-button class="cif-btn generate" (click)="criarNovaCif()">
+        <mat-icon>auto_fix_high</mat-icon>
+        GERAR PRÓXIMA CIF
+      </button>
+    </div>
+
+  </div>
+</app-base-modal>

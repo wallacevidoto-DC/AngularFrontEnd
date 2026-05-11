@@ -35,6 +35,7 @@
     "@coreui/angular": "^5.5.22",
     "@zxing/browser": "^0.1.5",
     "@zxing/library": "^0.21.3",
+    "ng-angular-popup": "^2.1.0",
     "ngx-toastr": "^19.1.0",
     "primeicons": "^7.0.0",
     "primeng": "^20.2.0",
