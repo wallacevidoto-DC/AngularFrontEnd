@@ -58,11 +58,7 @@ export class AddProdutoEntradaLivre extends ModalBase implements OnInit {
   ngOnInit(): void {
 
     this.wsService.messages$.subscribe(data => {
-      if (!data) {
-
-        return;
-      }
-
+      if (!data || !this.isOpen) return;
 
       if (data.type === 'get_produto_resposta') {
         if (data.dados) {

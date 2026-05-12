@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingService } from '../loading-page/LoadingService.service';
 import { Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from '../entrada-modal/index.interface';
 import { EstoqueItem } from '../../estoque/index.interface';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
@@ -32,7 +32,7 @@ export class TransferenciaModal extends ModalBase {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
   private _snackBar = inject(MatSnackBar);
   private dialog: MatDialog = inject(MatDialog)
   protected OpenSub: boolean = true;
@@ -55,8 +55,7 @@ export class TransferenciaModal extends ModalBase {
 
 
     this.wsService.messages$.subscribe(data => {
-
-      if (!data) return;
+      if (!data || !this.isOpen) return;
       this.loadingService.hide();
       if (data.type === 'get_address_resposta') {
         this.temProdutosIn = States.LOAD;
@@ -90,12 +89,12 @@ export class TransferenciaModal extends ModalBase {
       else if (data.type === 'transferencia_resposta') {
 
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
     });
@@ -163,7 +162,7 @@ export class TransferenciaModal extends ModalBase {
   submit() {
 
     if (!this.rua || !this.bloco || !this.apt) {
-      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
+      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios', 10000);
       return;
     }
 

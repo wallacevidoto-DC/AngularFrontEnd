@@ -34,7 +34,7 @@ export class EntradaCifModal extends ModalBase implements OnInit {
 
   ngOnInit(): void {
     this.sub = this.wsService.messages$.subscribe(data => {
-      if (!data) return;
+      if (!data || !this.isOpen) return;
 
       if (data.type === 'validar_cif_resposta') {
         this.loadingService.hide();

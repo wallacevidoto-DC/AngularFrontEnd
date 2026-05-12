@@ -6,7 +6,7 @@ import { WebSocketService } from '../../../service/ws.service';
 import { LoadingService } from '../loading-page/LoadingService.service';
 import { SaidaDto } from './index.interface';
 import { EstoqueItem } from '../../estoque/index.interface';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-saida-modal',
@@ -19,7 +19,7 @@ export class SaidaModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
   protected formData: EstoqueItem | null = null;
   protected formDataQtd!: number;
   protected formDataObs: string | null = null;
@@ -27,18 +27,17 @@ export class SaidaModal extends ModalBase implements OnInit {
   ngOnInit(): void {
 
     this.wsService.messages$.subscribe(data => {
-
-      if (!data) return;
+      if (!data || !this.isOpen) return;
 
       if (data.type === 'saida_resposta') {
         this.loadingService.hide();
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
     });
@@ -58,7 +57,7 @@ export class SaidaModal extends ModalBase implements OnInit {
 
   submit() {
     if (!this.formDataQtd) {
-      this.toastr.warning('Digite uma quantidade válida.', 'Atenção');
+      this.toastr.warning('Digite uma quantidade válida.', 'Atenção', 10000);
       return;
     }
     if (this.wsService.UserCurrent) {

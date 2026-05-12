@@ -12,7 +12,7 @@ import { DialogDescricaoComponent } from '../dialog-descricao/dialog-descricao';
 import { LoadingService } from '../loading-page/LoadingService.service';
 import { EntradaDto, Origem, ProdutoSpDto, PropsPST, ResponseGetAddress } from './index.interface';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 import { EntradasViewerDto } from '../../entrada/index.interface';
 import { Subscription } from 'rxjs';
 
@@ -30,7 +30,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
   private _snackBar = inject(MatSnackBar);
   protected OpenSub: boolean = true;
 
@@ -52,8 +52,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
   ngOnInit(): void {
 
     this.sub = this.wsService.messages$.subscribe(data => {
-
-      if (!data) return;
+      if (!data || !this.isOpen) return;
 
       if (data.type === 'get_address_resposta') {
         this.temProdutosIn = States.LOAD;
@@ -86,7 +85,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
       else if (data.type === 'entrada_conferencia_resposta') {
 
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque' });
           this.wsService.send({ action: 'get_estoque_entrada' });
           console.log('fechadno');
@@ -95,7 +94,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
           
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
       this.loadingService.hide();
@@ -154,7 +153,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
   submitE() {
 
     if (!this.rua || !this.bloco || !this.apt) {
-      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios');
+      this.toastr.warning('Por favor, preencha Rua, Bloco e Apt.', 'Campos obrigatórios', 10000);
       return;
     }
 
@@ -162,7 +161,7 @@ export class EntradaConferenciaModal extends ModalBase implements OnInit {
       const produtoInsert = this.produtos.filter(p => p.propsPST.origem === Origem.OUT);
 
       if (produtoInsert.length <= 0) {
-        this.toastr.warning('Adicione ao menos um produto.');
+        this.toastr.warning('Adicione ao menos um produto.', 'Atenção', 10000);
         return
       }
       const movimentacaoDto: EntradaDto = {

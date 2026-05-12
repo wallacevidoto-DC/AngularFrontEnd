@@ -52,11 +52,9 @@ export class EntradaPickingModal extends ModalBase implements OnInit {
   ngOnInit(): void {
 
     this.sub = this.wsService.messages$.subscribe(data => {
-
-      if (!data) return;
+      if (!data || !this.isOpen) return;
 
        if (data.type === 'picking_resposta') {
-
         if (data.status === 'ok') {
           this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque' });

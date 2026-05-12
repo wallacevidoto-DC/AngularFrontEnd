@@ -7,7 +7,7 @@ import { LoadingService } from '../loading-page/LoadingService.service';
 import { EstoqueItem } from '../../estoque/index.interface';
 import { CorrecaoDto } from './index.interface';
 import { Origem } from '../entrada-modal/index.interface';
-import { ToastrService } from 'ngx-toastr';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-correcao-modal',
@@ -21,7 +21,7 @@ export class CorrecaoModal extends ModalBase implements OnInit {
 
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
-  private toastr: ToastrService = inject(ToastrService);
+  private toastr: NgToastService = inject(NgToastService);
   protected formData: EstoqueItem = {
     estoqueId: 0,
     produtoId: 0,
@@ -41,17 +41,16 @@ export class CorrecaoModal extends ModalBase implements OnInit {
   ngOnInit(): void {
 
     this.wsService.messages$.subscribe(data => {
-
-      if (!data) return;
+      if (!data || !this.isOpen) return;
 
       if (data.type === 'correcao_resposta') {
         if (data.status === 'ok') {
-          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso');
+          this.toastr.success(data.mensagem || 'Operação realizada com sucesso!', 'Sucesso', 10000);
           this.wsService.send({ action: 'get_estoque' });
           this.onCloseBase()
         }
         else {
-          this.toastr.error(data.mensagem || 'Erro inesperado', 'Erro');
+          this.toastr.danger(data.mensagem || 'Erro inesperado', 'Erro', 10000);
         }
       }
       this.loadingService.hide();

@@ -16,6 +16,7 @@ import { SelectOperation } from "../modals/select-operation/select-operation";
 import { OperationSelect } from '../modals/select-operation/index.interface';
 import { EntradaPickingModal } from "../modals/entrada-picking-modal/entrada-picking-modal";
 import { EntradaCifModal } from "../modals/entrada-cif-modal/entrada-cif-modal";
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-entrada',
@@ -44,6 +45,7 @@ export class Entrada implements OnInit {
   private wsService: WebSocketService = inject(WebSocketService)
   private loadingService: LoadingService = inject(LoadingService)
   private dialog: MatDialog = inject(MatDialog);
+  private toastr: NgToastService = inject(NgToastService);
 
   ngOnInit() {
     this.wsService.status$.subscribe(status => {
@@ -118,7 +120,7 @@ export class Entrada implements OnInit {
 
     // Validação: quantidade não pode ser negativa ou maior que a QtdConferida
     if ($event.quantidade <= 0 || $event.quantidade > this.itemSelecionado.QtdConferida) {
-      alert(`A quantidade informada (${$event.quantidade}) não pode ser negativa ou maior que a quantidade conferida (${this.itemSelecionado.QtdConferida}).`);
+      this.toastr.warning(`A quantidade informada (${$event.quantidade}) não pode ser negativa ou maior que a quantidade conferida (${this.itemSelecionado.QtdConferida}).`, 'Atenção', 10000);
       return;
     }
 
