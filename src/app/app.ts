@@ -109,6 +109,10 @@ export class App implements OnInit {
   status: string = 'Conectando...';
   protected readonly title = signal('MAPA DE ESTOQUE');
 
+  get currentUser() {
+    return this.wsService.UserCurrent;
+  }
+
   goHome() {
     this.router.navigate(['/home']);
   }

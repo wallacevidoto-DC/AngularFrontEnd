@@ -1,22 +1,21 @@
 <app-loading-page />
 <ng-toast></ng-toast>
 <header>
-  <div class="header-content">
-    <div class="left-section">
-      <button *ngIf="!isHome" mat-mini-fab color="primary" class="back-button" (click)="goHome()" title="Voltar para Home">
-        <mat-icon>home</mat-icon>
-      </button>
-    </div>
-    
-    <div class="logo-section">
-      <img src="/background2.jpg" alt="Logo" class="logo">
-    </div>
-
-    <div class="right-section">
-      <div class="status" (click)="onStatusClick()" title="Clique para sair da sessão">
-        <app-status-ws/>
+  <div class="header-container">
+    <div class="header-main">
+      <div class="side-action btn-home">
+        <button *ngIf="!isHome" mat-icon-button class="home-btn" (click)="goHome()" title="Voltar para Home">
+          <mat-icon>home</mat-icon>
+        </button>
       </div>
-    </div>
-  </div>
-</header>
-<router-outlet></router-outlet>
+
+      <div class="brand-center">
+        <h1 class="app-title">{{ title() }}</h1>
+      </div>
+      <div class="side-info">
+        <div class="user-pill" *ngIf="currentUser">
+          <mat-icon>person</mat-icon>
+          <span class="user-label">{{ currentUser?.Name }}</span>
+        </div>
+        <div class="status-indicator" (click)="onStatusClick()">
+          <app-status-
