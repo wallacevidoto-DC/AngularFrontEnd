@@ -16,12 +16,13 @@ import { SelectOperation } from "../modals/select-operation/select-operation";
 import { OperationSelect } from '../modals/select-operation/index.interface';
 import { EntradaPickingModal } from "../modals/entrada-picking-modal/entrada-picking-modal";
 import { EntradaCifModal } from "../modals/entrada-cif-modal/entrada-cif-modal";
+import { SaidaDiretaModal } from "../modals/saida-direta-modal/saida-direta-modal";
 import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-entrada',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal, SelectOperation, EntradaPickingModal, EntradaCifModal],
+  imports: [CommonModule, FormsModule, MatButtonModule, RouterModule, MatIconModule, LoadingPage, MatCardActions, MatCardContent, MatCardSubtitle, MatCardHeader, MatCardTitle, MatCard, EntradaConferenciaCorrecaoModal, EntradaConferenciaModal, SelectOperation, EntradaPickingModal, EntradaCifModal, SaidaDiretaModal],
   templateUrl: './entrada.html',
   styleUrl: './entrada.scss'
 })
@@ -32,6 +33,7 @@ export class Entrada implements OnInit {
   @ViewChild('selectOP') selectOP!: any;
   @ViewChild('entradaModal') entradaModal!: any;
   @ViewChild('pickingModal') pickingModal!: any;
+  @ViewChild('saidaDiretaModal') saidaDiretaModal!: any;
   @ViewChild('cifModal') cifModal!: EntradaCifModal;
   
   dadosEstoque: EntradasViewerDto[] = [];
@@ -136,6 +138,13 @@ export class Entrada implements OnInit {
     if ($event.op === 'COMUM') {
       // this.itemSelecionado.QtdConferida = $event.quantidade
       this.entradaModal.openx({
+        ...this.itemSelecionado,
+        QtdConferida:$event.quantidade
+      });
+    }
+
+    if ($event.op === 'SAIDA_DIRETA') {
+      this.saidaDiretaModal.openx({
         ...this.itemSelecionado,
         QtdConferida:$event.quantidade
       });

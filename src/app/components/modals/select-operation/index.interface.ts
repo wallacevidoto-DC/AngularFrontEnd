@@ -1,4 +1,4 @@
 export interface OperationSelect{
-    op: 'PICKING' | 'COMUM';
+    op: 'PICKING' | 'COMUM' | 'SAIDA_DIRETA';
     quantidade: number;
 }

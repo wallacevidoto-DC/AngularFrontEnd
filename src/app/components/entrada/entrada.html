@@ -57,7 +57,7 @@
 
       <!-- Quando clicar, salva o item e abre a modal de seleção -->
       <button mat-flat-button 
-              (click)="onAbrirSelect(item)" 
+              (click)="onAbrirSelect(item)"  
               color="primary">
         <mat-icon>exit_to_app</mat-icon>
         ENTRADA
@@ -139,6 +139,7 @@
 
 <app-entrada-conferencia-modal #entradaModal ></app-entrada-conferencia-modal>
 <app-entrada-picking-modal #pickingModal ></app-entrada-picking-modal>
+<app-saida-direta-modal #saidaDiretaModal ></app-saida-direta-modal>
 <app-entrada-conferencia_correcao-modal #correcaoModal></app-entrada-conferencia_correcao-modal>
 <app-select-operation #selectOP (returnSelect)="returnSelect($event)"></app-select-operation>
 <app-entrada-cif-modal #cifModal></app-entrada-cif-modal>

@@ -30,7 +30,7 @@ export class SelectOperation extends ModalBase implements OnInit {
   @Output() returnSelect = new EventEmitter<OperationSelect>();
 
   quantidade: number = 1;
-  tipoSelecionado: 'PICKING' | 'COMUM' | null = null;
+  tipoSelecionado: 'PICKING' | 'COMUM' | 'SAIDA_DIRETA' | null = null;
 
   ngOnInit(): void {
     this.tipoSelecionado = null;
@@ -44,7 +44,7 @@ export class SelectOperation extends ModalBase implements OnInit {
   }
 
   // usado pelos botões
-  selecionarTipo(tipo: 'PICKING' | 'COMUM') {
+  selecionarTipo(tipo: 'PICKING' | 'COMUM' | 'SAIDA_DIRETA') {
     this.tipoSelecionado = tipo;
 
     // valida quantidade

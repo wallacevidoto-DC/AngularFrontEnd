@@ -11,7 +11,7 @@
     }
 
 
-    <!-- BOTOES PICKING / COMUM -->
+    <!-- BOTOES PICKING / COMUM / SAÍDA DIRETA -->
     <div class="button-group">
       <button mat-raised-button class="option-btn" (click)="selecionarTipo('PICKING')">
         <mat-icon>inventory_2</mat-icon>
@@ -21,6 +21,11 @@
       <button mat-raised-button class="option-btn" (click)="selecionarTipo('COMUM')">
         <mat-icon>inbox</mat-icon>
         Comum
+      </button>
+
+      <button mat-raised-button class="option-btn saida-direta-btn" (click)="selecionarTipo('SAIDA_DIRETA')">
+        <mat-icon>output</mat-icon>
+        Saída Direta
       </button>
     </div>
 
